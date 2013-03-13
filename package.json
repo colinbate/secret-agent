@@ -1,0 +1,25 @@
+{
+  "name": "secret-agent",
+  "version": "0.0.1",
+  "description": "An online version of Heimlich & Co.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "mercurial",
+    "url": "https://bitbucket.org/colinbate/secret-agent"
+  },
+  "keywords": [
+    "board",
+    "game",
+    "spies",
+    "spy",
+    "secret",
+    "agent",
+    "heimlich",
+    "detective"
+  ],
+  "author": "Colin Bate <colin@colinbate.com>",
+  "license": "MIT"
+}
