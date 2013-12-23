@@ -21,5 +21,11 @@
     "detective"
   ],
   "author": "Colin Bate <colin@colinbate.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "primus": "~1.5.1",
+    "primus-rooms": "~2.2.0",
+    "socket.io": "~0.9.16",
+    "node-static": "~0.7.2"
+  }
 }
