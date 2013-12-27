@@ -5,18 +5,28 @@
     <link rel="stylesheet" href="/css/secret.css" type="text/css">
     <link rel="shortcut icon" href="/favicon.ico">
   </head>
-  <body>
-    <header role="banner">
-      <h1>Secret Agent</h1>
-      <nav class="">
-      </nav>
-    </header>
-    <div class="game-window">
-      <ul id="player-list">
-        
-      </ul>
+  <body ng-controller="GameController">
+    <div class="content">
+      <header role="banner">
+        <h1>Secret Agent</h1>
+      </header>
+      <div class="game-window">
+        <div id="game-board" ng-controller="BoardController">
+
+        </div>
+        <div id="player-info" ng-controller="PlayerController">
+          <ul>
+            <li ng-repeat="player in players.list">{{name}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="chat-window" ng-controller="ChatController">
+      </div>
     </div>
-    <div class="version"></div>
+    <div class="info-collection" ng-controller="InfoController" ng-class="infoState()">
+      <input type="text" placeholder="Enter your name" ng-model="info.name">
+      <button ng-click="startPlaying()">Play</button>
+    </div>
     <div class="overlay"></div>
     <script data-main="/js/main.js" src="/lib/require.js"></script>
   </body>

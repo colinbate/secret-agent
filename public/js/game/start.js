@@ -1,34 +1,36 @@
-define(['primus'], function (Primus) {
-  'use strict';
-  var primus,
-      secretAgent,
-      addPlayer = function (name) {
-        var list = document.getElementById('player-list'),
-            li = document.createElement('li');
-        li.appendChild(document.createTextNode(name));
-        list.appendChild(li);
-      };
+define(
+    [
+        'angular',
+        'controller/loader',
+        'game/messages',
+        'game/events'
+    ],
+    function (angular, ctrlLoader, messages, events) {
+    'use strict';
 
-  secretAgent = window.SecretAgent = window.SecretAgent || {};
-  secretAgent.player = 'Player-' + Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-
-  return {
-    bootstrap: function () {
-      console.log('He\'s a secret agent man...');
-      primus = new Primus('/?game=mygame');
-      secretAgent.comms = primus;
-      addPlayer(secretAgent.player);
-      primus.on('data', function (data) {
-        console.log('Primus:', data);
-
-        if (data.action === 'join') {
-          primus.write({action: 'ident', player: secretAgent.player});
-          addPlayer(data.player);
-        } else if (data.action === 'ident') {
-          addPlayer(data.player);
+    var appName = 'secretAgent',
+        log = function () {
+            var msg = Array.prototype.join.call(arguments, ' ');
+            if (window.console) {
+                window.console.log(msg);
+            }
+        },
+        joinGameId = function () {
+          var gameId, hash = window.location.href.substr(window.location.href.indexOf('#')+1);
+          gameId = window.location.href === hash ? null : hash;
+          return gameId;
+        };
+    return {
+        bootstrap: function () {
+            var app, gameId = joinGameId();
+            log('He\'s a secret agent man...');
+            app = angular.module(appName, []);
+            app.provider('messages', messages);
+            app.config(['messagesProvider', function (messagesProvider) {
+              messagesProvider.setGameId(gameId);
+            }]);
+            ctrlLoader(app);
+            angular.bootstrap(document, [appName]);
         }
-      });
-      primus.write({action: 'join', player: secretAgent.player});
-    }
-  };
+    };
 });
