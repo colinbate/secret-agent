@@ -13,7 +13,7 @@ define(['primus', 'game/events'], function (Primus, events) {
       this.gameId = id;
     };
 
-    this.$get = function ($window, $rootScope) {
+    this.$get = function ($rootScope) {
       var self = this,
           primus,
           reconnect = function (gameId) {
@@ -33,6 +33,7 @@ define(['primus', 'game/events'], function (Primus, events) {
               // Reconnect with game info
               reconnect(data.id);
             }
+            console.log('Received message: ' + data.action);
             $rootScope.$broadcast(data.action, data);
           },
           getUrl = function (gameId) {
@@ -40,16 +41,23 @@ define(['primus', 'game/events'], function (Primus, events) {
             return self.url + (gameId ? '?game=' + gameId : '');
           };
       if (self.url === '') {
-        self.url = $window.location.href;
+        self.url = '/';
       }
       return {
-        send: function (action, payload) {
+        send: function (action, payload, sendLocal) {
           if (!primus) {
-            this.connect()
+            this.connect();
           }
           payload = payload || {};
           payload.action = action;
+          console.log('Sending message: ' + action);
           primus.write(payload);
+          if (sendLocal) {
+            setTimeout(function () {
+              console.log('Received local message: ' + action);
+              $rootScope.$broadcast(action, payload);
+            }, 0);
+          }
         },
         connect: function (gameId) {
           primus = new Primus(getUrl(gameId));
@@ -60,7 +68,7 @@ define(['primus', 'game/events'], function (Primus, events) {
         }
       };
     };
-    this.$get.$inject = ['$window', '$rootScope'];
+    this.$get.$inject = ['$rootScope'];
   };
 
   return messagesProvider;

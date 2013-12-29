@@ -1,27 +1,25 @@
 define(['game/events'], function (events) {
   'use strict';
 
-  var infoController = function ($scope, messages) {
+  var infoController = function ($scope) {
+    // UI ACTIONS -------------------------------------------
+
     $scope.startPlaying = function () {
+      $scope.$root.$broadcast('game:start');
+    };
+
+    $scope.submitName = function () {
       $scope.info.state = 2;
       if ($scope.isMaster()) {
-        $scope.info.agents = [$scope.info.name];
-        messages.send(events.masterJoin);
+        $scope.$root.$broadcast('player:add', $scope.info.name);
+        $scope.sendMessage(events.masterJoin);
       } else {
-        messages.send(events.join, {name: $scope.info.name});
+        $scope.$root.$broadcast('player:add', $scope.info.name);
+        $scope.sendMessage(events.join, {name: $scope.info.name});
       }
     };
-
-    $scope.infoState = function () {
-      var classes = [];
-      if ($scope.info.state === 1) {
-        classes.push('state-show');
-      }
-      return classes;
-    };
-
   };
-  infoController.$inject = ['$scope', 'messages'];
+  infoController.$inject = ['$scope'];
   infoController.ctrlName = 'InfoController';
 
   return infoController;

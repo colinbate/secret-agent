@@ -1,0 +1,61 @@
+.info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .game-board, .player-agent {
+	display: none;
+}
+
+body.initial {
+	
+}
+
+body.provide-name {
+	.info-collection, .name-entry {
+		display: block;
+	}
+}
+
+body.awaiting-players {
+	.info-collection, .game-url {
+		display: block;
+	}
+}
+
+body.awaiting-players.master-role {
+	.get-started {
+		display: block;
+	}
+}
+
+body.playing {
+	.my-agent, .die, .game-board {
+		display: block;
+	}
+}
+
+body.game-over {
+	.player-agent {
+		display: inline;
+	}
+}
+
+.game-board {
+	.board-locations, .agent-positions button {
+		display: none;
+	}
+}
+
+.game-board.waiting {
+
+}
+
+.game-board.moving-agents {
+	.agent-positions button {
+		display: inline;
+	}
+}
+
+.game-board.moving-file {
+	.board-locations {
+		display: block;
+	}
+}
+
+

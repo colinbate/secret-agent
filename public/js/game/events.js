@@ -19,6 +19,13 @@ define([], function () {
     moveFile: 'moveFile',
     newTurn: 'newTurn',
     gameOver: 'gameOver',
-    revealSelf: 'revealSelf'
+    revealSelf: 'revealSelf',
+    onMessage: function (evt, $scope, fn) {
+      $scope.$on(evt, function (e, msg) {
+        $scope.$apply(function () {
+          fn.call($scope, msg);
+        });
+      });
+    }
   };
 });
