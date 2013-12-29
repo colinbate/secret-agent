@@ -21,6 +21,7 @@
           <ul class="counter-positions">
             <li ng-repeat="counter in board.counters">{{getAgent(counter[0]).name}} at {{counter[1]}}</li>
           </ul>
+          <div class="file-safe">File is in {{getLocation(board.file).name}}</div>
         </div>
         <div class="player-info" ng-controller="PlayerController">
           <ul>
