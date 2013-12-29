@@ -1,3 +1,4 @@
+/*jshint node:true */
 'use strict';
 process.chdir(__dirname);
 var Primus = require('primus'),
@@ -5,7 +6,7 @@ var Primus = require('primus'),
     http = require('http'),
     nodestatic = require('node-static'),
     uuid = require('uuid'),
-    file = new nodestatic.Server('./public', {cache: false}),
+    file = new nodestatic.Server('./public', {cache: false, headers: {'Cache-Control': 'no-cache, must-revalidate'}}),
     server = http.createServer(function (request, response) {
       request.addListener('end', function () {
           file.serve(request, response);
@@ -14,10 +15,15 @@ var Primus = require('primus'),
     primus = new Primus(server, {
       transformer: 'socket.io'
     }),
+    randomInt = function (max, min) {
+      return parseInt(Math.floor(Math.random() * (max - min + 1) + min), 10);
+    },
     interceptors = {
       hello: function (msg, spark, game) {
         if (game) {
+          msg.source = spark.id;
           primus.room(game + '-master').write(msg);
+          console.log('Said hello to room: ' + game + '-master');
         }
       },
       masterJoin: function (msg, spark, game) {
@@ -29,11 +35,62 @@ var Primus = require('primus'),
         spark.join(game);
         spark.join(game + '-master');
       },
+      identify: function (msg, spark, game) {
+        var socket;
+        if (game && msg.dest) {
+          socket = primus.connections[msg.dest];
+          if (socket) {
+            socket.write(msg);
+          }
+        }
+      },
       startGame: function (msg, spark, game) {
-        
+        var players = msg.players,
+            playerCount = players.length,
+            toRemove = Math.max(0, 5 - players.length), remInd,
+            agents = [0,1,2,3,4,5,6],
+            pool;
+        players.sort(function () { return 0.5 - Math.random(); });
+        while (toRemove) {
+          remInd = randomInt(agents.length - 1, 0);
+          agents.splice(remInd, 1);
+          toRemove -= 1;
+        }
+        pool = agents.concat(); // clone
+
+        spark.room(game).clients(function (err, list) {
+          var idx, agent, aIdx, payload, socket;
+          console.log('Found ' + list.length + ' connected clients.');
+          list.reverse();
+          if (list.length > playerCount) {
+            // Too many clients vs players.
+            console.error('There are too many clients (' + list.length + ') vs players (' + playerCount + ') in game ' + game);
+            list.splice(playerCount, list.length - playerCount);
+          }
+          for (idx = 0; idx < list.length; idx += 1) {
+            console.log('Client id: ' + list[idx]);
+            aIdx = randomInt(pool.length - 1, 0);
+            agent = pool[aIdx];
+            pool.splice(aIdx, 1);
+            payload = {action:'startGame', playOrder: players, agents: agents, you: agent};
+            socket = primus.connections[list[idx]];
+            if (socket) {
+              //console.log(require('util').inspect(socket));
+              process.nextTick(function (p) {
+                console.log(require('util').inspect(p));
+                socket.write.call(socket, p);
+              }.bind(null, payload));
+            } else {
+              console.error('No socket for ' + list[idx]);
+            }
+          }
+        });
       },
       rollDie: function (msg, spark, game) {
-
+        var value = randomInt(6, 1),
+            payload = {action: 'rolledDie', name: msg.name, value: value};
+        spark.write(payload);
+        spark.room(game).write(payload);
       }
     },
     createGame = function (spark) {
@@ -64,10 +121,13 @@ primus.on('connection', function (spark) {
     var send = function () {
           spark.room(game).write(message);
         };
-
+    console.log('Received message on server: ' + message.action);
     if (message && interceptors[message.action]) {
       interceptors[message.action].call(null, message, spark, game);
       return;
+    }
+    if (~spark.rooms().indexOf(game + '-' + spark.id)) {
+      spark.leave(game + '-' + spark.id);
     }
     // check if spark is already in this room
     if (~spark.rooms().indexOf(game)) {
@@ -78,7 +138,7 @@ primus.on('connection', function (spark) {
         send();
       });
     }
-  })
+  });
 });
 
 primus.on('disconnection', function (spark) {

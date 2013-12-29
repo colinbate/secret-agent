@@ -2,10 +2,9 @@ define(
     [
         'angular',
         'controller/loader',
-        'game/messages',
-        'game/events'
+        'game/messages'
     ],
-    function (angular, ctrlLoader, messages, events) {
+    function (angular, ctrlLoader, messages) {
     'use strict';
 
     var appName = 'secretAgent',

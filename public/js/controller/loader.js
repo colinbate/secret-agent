@@ -2,7 +2,8 @@ define([
     'controller/game',
     'controller/chat',
     'controller/board',
-    'controller/player'
+    'controller/player',
+    'controller/info'
   ],
   function () {
   'use strict';

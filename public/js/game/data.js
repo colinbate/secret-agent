@@ -25,6 +25,6 @@ define([], function () {
       {name: 'House 10', points: 10},
       {name: 'Ruin', points: -3},
     ],
-    states: ['initial', 'provide name', 'awaiting players', 'playing', 'game over']
+    states: ['initial', 'provide-name', 'awaiting-players', 'playing', 'game-over']
   };
 });

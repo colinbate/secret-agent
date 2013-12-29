@@ -1,0 +1,15 @@
+.current-turn {
+	border: 1px solid red;
+	padding: 4px;
+}
+
+.viewing-player {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.winning-player {
+	&:after {
+		content: ' is a winner!';
+	}
+}
