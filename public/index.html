@@ -10,8 +10,12 @@
       <header role="banner">
         <h1>Secret Agent</h1>
       </header>
+      <nav role="navigation">
+        
+      </nav>
       <div class="game-window">
         <div class="game-board" ng-controller="BoardController" ng-class="boardState()">
+          <div class="board-wrapper"><img src="/img/game-board-1024-wide.jpeg"></div>
           <ul class="board-locations">
             <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)">{{loc.name}}</li>
           </ul>

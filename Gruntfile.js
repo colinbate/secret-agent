@@ -38,8 +38,7 @@ module.exports = function(grunt) {
           require: false,
           module: false,
           console: false
-        },
-        ignores: ['<%= boardJsFile %>', 'migration.js', 'public/assets/plugins/**/lib/*.js']
+        }
       },
       files: ['*.js', 'public/js/**/*.js']
     },
@@ -57,11 +56,22 @@ module.exports = function(grunt) {
           'public/css/secret.css': 'less/core.less',
         }
       }
-    }
+    },
+    watch: {
+      less: {
+        files: ['less/**/*.less'],
+        tasks: 'less:dev'
+      },
+      js: {
+        files: ['*.js', 'public/js/**/*.js'],
+        tasks: 'jshint'
+      }
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', ['jshint']);
 
