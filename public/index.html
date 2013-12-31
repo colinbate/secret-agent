@@ -11,28 +11,29 @@
         <h1>Secret Agent</h1>
       </header>
       <nav role="navigation">
-        
+
       </nav>
       <div class="game-window">
         <div class="game-board" ng-controller="BoardController" ng-class="boardState()">
-          <div class="board-wrapper"><img src="/img/game-board-1024-wide.jpeg"></div>
-          <ul class="board-locations">
-            <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)">{{loc.name}}</li>
-          </ul>
+          <div class="board-wrapper">
+            <img src="/img/game-board-1024-wide.jpeg">
+            <ul class="board-locations">
+              <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)"></li>
+            </ul>
+          </div>
           <ul class="agent-positions">
             <li ng-repeat="agent in board.agents">{{getAgent(agent[0]).name}} at {{getLocation(agent[1]).name}} <button ng-click="moveAgent(agent[0], 1)">Move 1</button></li>
           </ul>
           <ul class="counter-positions">
             <li ng-repeat="counter in board.counters">{{getAgent(counter[0]).name}} at {{counter[1]}}</li>
           </ul>
-          <div class="file-safe">File is in {{getLocation(board.file).name}}</div>
         </div>
         <div class="player-info" ng-controller="PlayerController">
-          <ul>
+          <ul class="player-list">
             <li ng-repeat="p in players.list" ng-class="playerClass(p)" class="ng-cloak">{{p.name}} <span class="player-agent">{{p.agent.name}}</span></li>
           </ul>
-          <div class="die">{{currentDieValue()}}</div>
-          <div class="my-agent" ng-style="{'color': myAgent().color}">{{myAgent().name}}</div>
+          <div class="die-pit" ng-class="currentDieValue()"></div>
+          <div class="agent-card my-agent" ng-class="myAgent().card"></div>
         </div>
       </div>
       <div class="chat-window" ng-controller="ChatController">

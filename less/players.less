@@ -1,6 +1,21 @@
+.player-info {
+	position: absolute;
+	top: 0;
+	right: 10px;
+}
+
+.player-list {
+	list-style: none;
+	padding: 0;
+	width: 200px;
+
+	li {
+		padding: 4px;
+	}
+}
+
 .current-turn {
-	border: 1px solid red;
-	padding: 4px;
+	background-color: #ccc;
 }
 
 .viewing-player {
@@ -11,5 +26,44 @@
 .winning-player {
 	&:after {
 		content: ' is a winner!';
+	}
+}
+
+.my-agent {
+	right: 10px;
+	top: 10px;
+}
+
+.agent-card {
+	background: #fff url(/img/agent-cards.jpg) 0 0 no-repeat;
+	width: 140px;
+	height: 210px;
+
+	&.mr-gray {
+		background-position: -11px -13px;
+	}
+
+	&.mr-blue {
+		background-position: -152px -13px;
+	}
+
+	&.mr-red {
+		background-position: -295px -13px;
+	}
+
+	&.mr-purple {
+		background-position: -11px -227px;
+	}
+
+	&.mr-green {
+		background-position: -152px -227px;
+	}
+
+	&.mr-yellow {
+		background-position: -295px -227px;
+	}
+
+	&.mr-orange {
+		background-position: -152px -443px;
 	}
 }

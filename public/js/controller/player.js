@@ -179,10 +179,12 @@ define(['game/events'], function (events) {
     };
 
     $scope.currentDieValue = function () {
+      var classes = [];
       if ($scope.players.current.rolled && $scope.players.current.remaining) {
-        return $scope.players.current.remaining + ' / ' + $scope.players.current.rolled;
+        classes.push('die');
+        classes.push($scope.getDieClass($scope.players.current.rolled));
       }
-      return '- / -';
+      return classes;
     };
 
   };

@@ -27,6 +27,14 @@ define(['game/data', 'game/events'], function (data, events) {
       return data.locations[index];
     };
 
+    $scope.getDieClass = function (roll) {
+      if (roll < 1 || roll > 6) {
+        $scope.setError('Invalid roll of the die: ' + roll);
+        return;
+      }
+      return data.dice[roll - 1];
+    };
+
     $scope.locationCount = function () {
       return data.locations.length;
     };
