@@ -147,9 +147,11 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.moveAgent = function (agent, steps) {
       var delta = [agent, steps];
-      $scope.moveAgentDelta(delta);
-      $scope.sendMessage(events.moveAgent, {name: $scope.info.name, delta: delta, agents: $scope.board.agents});
-      $scope.$root.$broadcast('turn:move', delta);
+      if ($scope.board.state === state.MOVE_AGENTS) {
+        $scope.moveAgentDelta(delta);
+        $scope.sendMessage(events.moveAgent, {name: $scope.info.name, delta: delta, agents: $scope.board.agents});
+        $scope.$root.$broadcast('turn:move', delta);
+      }
     };
 
     $scope.moveFileTo = function (loc) {
@@ -169,6 +171,9 @@ define(['game/events', 'game/data'], function (events, data) {
       classes.push('location-' + index);
       if (index === $scope.board.file) {
         classes.push('has-file');
+      }
+      if ($scope.board.locations[index].agents.length === 0) {
+        classes.push('empty');
       }
       return classes;
     };

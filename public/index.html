@@ -20,16 +20,13 @@
             <ul class="board-locations">
               <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)">
                 <div class="markers">
-                  <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card"></div>
+                  <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card" ng-click="moveAgent(agt.id, 1)"></div>
                 </div>
               </li>
             </ul>
           </div>
-          <ul class="agent-positions">
-            <li ng-repeat="agent in board.agents">{{getAgent(agent[0]).name}} <button ng-click="moveAgent(agent[0], 1)">Move 1</button></li>
-          </ul>
           <ul class="counter-positions">
-            <li ng-repeat="counter in board.counters">{{getAgent(counter[0]).name}} at {{counter[1]}}</li>
+            <li ng-repeat="counter in board.counters"><span class="counter" ng-class="getAgent(counter[0]).card"></span> at {{counter[1]}}</li>
           </ul>
         </div>
         <div class="player-info" ng-controller="PlayerController">
