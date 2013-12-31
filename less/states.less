@@ -37,9 +37,7 @@ body.game-over {
 }
 
 .game-board {
-	.agent-positions button {
-		display: none;
-	}
+
 }
 
 .game-board.waiting {
@@ -47,13 +45,17 @@ body.game-over {
 }
 
 .game-board.moving-agents {
-	.agent-positions button {
-		display: inline;
+	.markers .agent {
+		cursor: hand;
+		cursor: pointer;
 	}
 }
 
 .game-board.moving-file {
-
+	.board-locations .empty {
+		cursor: hand;
+		cursor: pointer;
+	}
 }
 
 
