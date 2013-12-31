@@ -6,6 +6,17 @@
 	
 }
 
+.make-agent(@base) {
+	background-color: @base;
+	background-image: -webkit-linear-gradient(top, lighten(@base, 10%), @base 80%);
+	box-shadow: 0px 5px 0 darken(@base, 20%), 0 5px 3px rgba(20,20,20,0.7), 0 8px 6px rgba(0,0,0,0.5);
+	&:after {
+		background-color: @base;
+		background-image: -webkit-radial-gradient(8px 7px, circle, lighten(@base, 20%), darken(@base, 20%));
+		box-shadow: 1px 1px 0 darken(@base, 20%), 1px 3px 3px darken(@base, 10%);
+	}
+}
+
 .board-locations {
 	margin: 0;
 	padding: 0;
@@ -15,7 +26,71 @@
 		position: absolute;
 		list-style: none;
 		margin: 0;
+		padding: 0;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -0.3em;
+		}
 	}
+
+	.markers {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		padding: 0;
+		width: 100%;
+	}
+
+	.agent {
+		width: 50px; height: 20px;
+		border-radius: ~"20px / 10px";
+		position: relative;
+		margin: 7px 0px;
+		font-size: 6px;
+		display: inline-block;
+
+		&:after {
+			content: "";
+			width: 26px; height: 20px;
+			position: absolute;
+			top: -5px;
+			left: 12px;
+			border-radius: ~"13px / 10px";
+		}
+	}
+
+	.agent.mr-gray {
+		.make-agent(#b8bfb9);
+	}
+
+	.agent.mr-blue {
+		.make-agent(#2569cc);
+	}
+
+	.agent.mr-red {
+		.make-agent(#c0001b);
+	}
+
+	.agent.mr-purple {
+		.make-agent(#303c9b);
+	}
+
+	.agent.mr-green {
+		.make-agent(#409944);
+	}
+
+	.agent.mr-yellow {
+		.make-agent(#feed38);
+	}
+
+	.agent.mr-orange {
+		.make-agent(#e96823);
+	}
+
 	.has-file {
 		background-image: url(/img/safe.jpg);
 		background-repeat: no-repeat;

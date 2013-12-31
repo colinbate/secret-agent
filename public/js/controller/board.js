@@ -21,11 +21,37 @@ define(['game/events', 'game/data'], function (events, data) {
 
     // INTERNAL STATE MANAGEMENT ----------------------------
 
+    $scope.addAgentToLocation = function (agent, loc) {
+      $scope.board.locations[loc].agents.push($scope.getAgent(agent));
+    };
+
+    $scope.removeAgentFromLocation = function (agent, loc) {
+      var ii;
+      for (ii = 0; ii < $scope.board.locations[loc].agents.length; ii += 1) {
+        if ($scope.board.locations[loc].agents[ii].id === agent) {
+          $scope.board.locations[loc].agents.splice(ii, 1);
+          break;
+        }
+      }
+    };
+
+    $scope.moveAllAgentsToLocation = function (loc) {
+      var ii;
+      for (ii = 0; ii < $scope.board.locations.length; ii += 1) {
+        $scope.board.locations[ii].agents = [];
+      }
+      for (ii = 0; ii < $scope.board.agents.length; ii += 1) {
+        $scope.addAgentToLocation($scope.board.agents[ii][0], loc);
+      }
+    };
+
     $scope.moveAgentDelta = function (delta) {
       var ii;
       for (ii = 0; ii < $scope.board.agents.length; ii += 1) {
         if ($scope.board.agents[ii][0] === delta[0]) {
+          $scope.removeAgentFromLocation(delta[0], $scope.board.agents[ii][1]);
           $scope.board.agents[ii][1] = ($scope.board.agents[ii][1] + delta[1]) % $scope.locationCount();
+          $scope.addAgentToLocation(delta[0], $scope.board.agents[ii][1]);
           break;
         }
       }
@@ -77,6 +103,7 @@ define(['game/events', 'game/data'], function (events, data) {
         $scope.board.counters.push(getMarker(msg.agents[aidx]));
         $scope.board.agents.push(getMarker(msg.agents[aidx]));
       }
+      $scope.moveAllAgentsToLocation(0);
     };
 
     $scope.handleNewTurn = function () {
