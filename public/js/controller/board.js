@@ -9,6 +9,13 @@ define(['game/events', 'game/data'], function (events, data) {
           obj.push(aId);
           obj.push(val || 0);
           return obj;
+        },
+        getTrack = function (max) {
+          var track = [], tt;
+          for (tt = 0; tt <= max; tt += 1) {
+            track.push(tt);
+          }
+          return track;
         };
 
     $scope.board = {
@@ -16,6 +23,7 @@ define(['game/events', 'game/data'], function (events, data) {
       counters: [],
       agents: [],
       locations: data.locations,
+      track: getTrack(42),
       state: state.WAIT
     };
 

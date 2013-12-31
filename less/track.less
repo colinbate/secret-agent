@@ -1,0 +1,75 @@
+@spaces: 42;
+
+@spaceTL: 8;
+@spaceTR: 21;
+@spaceBR: 29;
+@spaceBL: 42;
+
+@boxWidth: 72px;
+@boxHeight: 76px;
+@offX: 15px;
+@offY: 9px;
+
+// LEFT SIDE
+.counterLoop (@index) when (@index < @spaceTL) {
+  @dy: @spaceTL - @index;
+  .track-@{index} {
+    top: @dy * @boxHeight + @offY;
+    left: @offX;
+    &:before {
+      content: "@{index}"
+    }
+  }
+  .counterLoop(@index + 1);
+}
+
+// TOP
+.counterLoop (@index) when (@index >= @spaceTL) and (@index < @spaceTR) {
+  @dx: @index - @spaceTL;
+  .track-@{index} {
+    top: @offY;
+    left: @dx * @boxWidth + @offX;
+    &:before {
+      content: "@{index}"
+    }
+  }
+  .counterLoop(@index + 1);
+}
+
+// RIGHT SIDE
+.counterLoop (@index) when (@index >= @spaceTR) and (@index < @spaceBR) {
+  @dy: @index - @spaceTR;
+  @dx: @spaceTR - @spaceTL;
+  .track-@{index} {
+    top: @dy * @boxHeight + @offY;
+    left: @dx * @boxWidth + @offX;
+    &:before {
+      content: "@{index}"
+    }
+  }
+  .counterLoop(@index + 1);
+}
+
+// BOTTOM
+.counterLoop (@index) when (@index >= @spaceBR) and (@index <= @spaceBL) {
+  @dx: @spaceBL - @index;
+  @dy: @spaceBR - @spaceTR;
+  .track-@{index} {
+    top: @dy * @boxHeight + @offY;
+    left: @dx * @boxWidth + @offY;
+    &:before {
+      content: "@{index}"
+    }
+  }
+  .counterLoop(@index + 1);
+}
+
+.counterLoop(0);
+
+.track {
+	background-color: rgba(255, 255, 255, 0.6);
+	width: 69px;
+	height: 69px;
+	position: absolute;
+	list-style: none;
+}
