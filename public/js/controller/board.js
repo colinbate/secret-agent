@@ -139,6 +139,7 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.locState = function (index) {
       var classes = [];
+      classes.push('location-' + index);
       if (index === $scope.board.file) {
         classes.push('has-file');
       }

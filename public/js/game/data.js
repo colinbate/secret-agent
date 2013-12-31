@@ -3,13 +3,13 @@ define([], function () {
 
   return {
     agents: [
-      {name: 'Mr. Gray', card: 'mr-gray.png', color: '#b8bfb9'},
-      {name: 'Mr. Blue', card: 'mr-blue.png', color: '#2569cc'},
-      {name: 'Mr. Red', card: 'mr-red.png', color: '#c0001b'},
-      {name: 'Mr. Purple', card: 'mr-purple.png', color: '#303c9b'},
-      {name: 'Mr. Green', card: 'mr-green.png', color: '#409944'},
-      {name: 'Mr. Yellow', card: 'mr-yellow.png', color: '#feed38'},
-      {name: 'Mr. Orange', card: 'mr-orange.png', color: '#e96823'}
+      {name: 'Mr. Gray', card: 'mr-gray', color: '#b8bfb9'},
+      {name: 'Mr. Blue', card: 'mr-blue', color: '#2569cc'},
+      {name: 'Mr. Red', card: 'mr-red', color: '#c0001b'},
+      {name: 'Mr. Purple', card: 'mr-purple', color: '#303c9b'},
+      {name: 'Mr. Green', card: 'mr-green', color: '#409944'},
+      {name: 'Mr. Yellow', card: 'mr-yellow', color: '#feed38'},
+      {name: 'Mr. Orange', card: 'mr-orange', color: '#e96823'}
     ],
     locations: [
       {name: 'Church', points: 0},
@@ -25,6 +25,7 @@ define([], function () {
       {name: 'House 10', points: 10},
       {name: 'Ruin', points: -3},
     ],
-    states: ['initial', 'provide-name', 'awaiting-players', 'playing', 'game-over']
+    states: ['initial', 'provide-name', 'awaiting-players', 'playing', 'game-over'],
+    dice: ['one', 'two', 'three', 'four', 'five', 'six']
   };
 });
