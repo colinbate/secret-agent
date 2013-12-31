@@ -18,11 +18,15 @@
           <div class="board-wrapper">
             <img src="/img/game-board-1024-wide.jpeg">
             <ul class="board-locations">
-              <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)"></li>
+              <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)">
+                <div class="markers">
+                  <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card"></div>
+                </div>
+              </li>
             </ul>
           </div>
           <ul class="agent-positions">
-            <li ng-repeat="agent in board.agents">{{getAgent(agent[0]).name}} at {{getLocation(agent[1]).name}} <button ng-click="moveAgent(agent[0], 1)">Move 1</button></li>
+            <li ng-repeat="agent in board.agents">{{getAgent(agent[0]).name}} <button ng-click="moveAgent(agent[0], 1)">Move 1</button></li>
           </ul>
           <ul class="counter-positions">
             <li ng-repeat="counter in board.counters">{{getAgent(counter[0]).name}} at {{counter[1]}}</li>
