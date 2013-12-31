@@ -24,10 +24,10 @@
                 </div>
               </li>
             </ul>
+            <ul class="board-track">
+              <li ng-repeat="tile in board.track" class="track" ng-class="'track-'+tile"></li>
+            </ul>
           </div>
-          <ul class="counter-positions">
-            <li ng-repeat="counter in board.counters"><span class="counter" ng-class="getAgent(counter[0]).card"></span> at {{counter[1]}}</li>
-          </ul>
         </div>
         <div class="player-info" ng-controller="PlayerController">
           <ul class="player-list">
