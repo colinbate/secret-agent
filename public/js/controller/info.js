@@ -1,7 +1,7 @@
 define(['game/events'], function (events) {
   'use strict';
 
-  var infoController = function ($scope) {
+  var infoController = function ($scope, $window) {
     // UI ACTIONS -------------------------------------------
 
     $scope.startPlaying = function () {
@@ -18,8 +18,12 @@ define(['game/events'], function (events) {
         $scope.sendMessage(events.join, {name: $scope.info.name});
       }
     };
+
+    $scope.fullUrl = function () {
+      return $window.location.protocol + '//' + $window.location.host + '/' + $scope.info.id;
+    };
   };
-  infoController.$inject = ['$scope'];
+  infoController.$inject = ['$scope', '$window'];
   infoController.ctrlName = 'InfoController';
 
   return infoController;

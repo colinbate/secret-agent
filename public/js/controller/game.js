@@ -1,7 +1,7 @@
 define(['game/data', 'game/events'], function (data, events) {
   'use strict';
 
-  var gameController = function ($scope, messages) {
+  var gameController = function ($scope, messages, $sce) {
     $scope.info = {
       id: '',
       state: 0,
@@ -49,6 +49,10 @@ define(['game/data', 'game/events'], function (data, events) {
 
     $scope.setHelp = function (msg) {
       $scope.game.message = msg;
+    };
+
+    $scope.getHelp = function () {
+      return $sce.trustAsHtml($scope.game.message);
     };
 
     $scope.getMe = function () {
@@ -143,7 +147,7 @@ define(['game/data', 'game/events'], function (data, events) {
     $scope.initialize();
 
   };
-  gameController.$inject = ['$scope', 'messages'];
+  gameController.$inject = ['$scope', 'messages', '$sce'];
   gameController.ctrlName = 'GameController';
 
   return gameController;

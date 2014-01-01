@@ -31,7 +31,7 @@
                 </div>
               </li>
             </ul>
-            <div class="game-messages ng-cloak"><span ng-bind-html="game.message"></span></div>
+            <div class="game-messages ng-cloak"><span ng-bind-html="getHelp()"></span></div>
           </div>
         </div>
         <div class="player-info" ng-controller="PlayerController">
@@ -50,7 +50,7 @@
         <input type="text" placeholder="Enter your name" ng-model="info.name">
         <button ng-click="submitName()">Play</button>
       </div>
-      <div class="game-url"><a href="/#{{info.id}}">Game Link</a></div>
+      <div class="game-url"><a href="/#{{info.id}}" ng-bind="fullUrl()"></a></div>
       <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
     </div>
     <div class="overlay"></div>
