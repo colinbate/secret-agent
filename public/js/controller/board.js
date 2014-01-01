@@ -127,13 +127,17 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.setCounters = function (counters) {
       var ii;
+      if (counters.length !== $scope.board.counters.length) {
+        $scope.setError('Old and new counters do not have the same number of items');
+        return;
+      }
       for (ii = 0; ii < $scope.board.counters.length; ii += 1) {
-        $scope.removeCounterFromTile($scope.board.counters[ii]);
+        if ($scope.board.counters[ii][1] !== counters[ii][1]) {
+          $scope.removeCounterFromTile($scope.board.counters[ii]);
+          $scope.addCounterToTile(counters[ii]);
+        }
       }
       $scope.board.counters = counters;
-      for (ii = 0; ii < $scope.board.counters.length; ii += 1) {
-        $scope.addCounterToTile($scope.board.counters[ii]);
-      }
     };
 
     $scope.haveAgentsFinished = function () {
@@ -188,6 +192,7 @@ define(['game/events', 'game/data'], function (events, data) {
       if (!winners.length && $scope.board.state === state.MOVE_AGENTS) {
         // Need to move file.
         $scope.board.state = state.MOVE_FILE;
+        $scope.setHelp('Points tallied...<br>Please move the safe to a new location.');
       }
     };
 
@@ -211,8 +216,14 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.moveFileTo = function (loc) {
       // TODO: Do a check that no agent is in this location!
-      if (loc !== $scope.board.file && $scope.board.state === state.MOVE_FILE) {
-        $scope.sendMessage(events.moveFile, {position: loc}, true);
+      if ($scope.board.state === state.MOVE_FILE) {
+        if (loc === $scope.board.file) {
+          $scope.setHelp('The safe cannot stay where it is...');
+        } else if ($scope.board.locations[loc].agents.length) {
+          $scope.setHelp('Please put the safe in an empty location.');
+        } else {
+          $scope.sendMessage(events.moveFile, {position: loc}, true);
+        }
       }
     };
 
@@ -240,7 +251,7 @@ define(['game/events', 'game/data'], function (events, data) {
         classes.push('many');
       }
       return classes;
-    }
+    };
 
     // GAME FLOW LOGIC --------------------------------------
 

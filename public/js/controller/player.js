@@ -116,13 +116,15 @@ define(['game/events'], function (events) {
 
     $scope.handleMoveAgent = function (msg) {
       $scope.players.current.remaining -= msg.delta[1];
-
       if ($scope.players.current.remaining < 0) {
         $scope.setError('Too many moves taken!');
         return;
       }
       if ($scope.players.current.remaining === 0) {
+        $scope.setHelp('Great, all done.');
         $scope.$root.$broadcast('turn:moving:end');
+      } else {
+        $scope.setHelp('Good, only ' + $scope.players.current.remaining + ' more...' );
       }
     };
 

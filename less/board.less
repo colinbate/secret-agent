@@ -238,6 +238,35 @@
 	}
 }
 
+.game-messages {
+	position: absolute;
+	width: 470px;
+	height: 125px;
+	left: 282px;
+	top: 290px;
+	position: absolute;
+	text-align: center;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+		margin-right: -0.3em;
+	}
+
+	span {
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		padding: 0;
+		background-color: rgba(255, 255, 255, 0.5);
+		color: @color-content-dark;
+		padding: 0.5em;
+		font-size: 22px;
+	}
+}
+
 .board-wrapper {
 	position: relative;
 }
