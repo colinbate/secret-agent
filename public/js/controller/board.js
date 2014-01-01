@@ -157,6 +157,7 @@ define(['game/events', 'game/data'], function (events, data) {
       $scope.board.counters = [];
       $scope.board.agents = [];
       $scope.board.state = state.WAIT;
+      $scope.board.file = msg.opts.safeLocation || 7;
       for (aidx = 0; aidx < alen; aidx += 1) {
         $scope.board.counters.push(getMarker(msg.agents[aidx]));
         $scope.board.agents.push(getMarker(msg.agents[aidx]));
@@ -189,11 +190,20 @@ define(['game/events', 'game/data'], function (events, data) {
       var winners;
       $scope.setCounters(msg.counters);
       winners = $scope.haveAgentsFinished();
-      if (!winners.length && $scope.board.state === state.MOVE_AGENTS) {
-        // Need to move file.
-        $scope.board.state = state.MOVE_FILE;
-        $scope.setHelp('Points tallied...<br>Please move the safe to a new location.');
+      if (!winners.length) {
+        if ($scope.board.state === state.MOVE_AGENTS) {
+          // Need to move file.
+          $scope.board.state = state.MOVE_FILE;
+          $scope.setHelp('Points tallied...<br>Please move the safe to a new location.');
+        } else {
+          // Someone else is moving file.
+          $scope.$root.$broadcast('turn:move:file:other');
+        }
       }
+    };
+
+    $scope.handleGameOver = function () {
+      $scope.board.state = state.WAIT;
     };
 
     events.onMessage(events.startGame, $scope, $scope.handleStartGame);
@@ -202,6 +212,7 @@ define(['game/events', 'game/data'], function (events, data) {
     events.onMessage(events.moveAgent, $scope, $scope.handleMoveAgent);
     events.onMessage(events.moveFile, $scope, $scope.handleMoveFile);
     events.onMessage(events.tally, $scope, $scope.handleTally);
+    events.onMessage(events.gameOver, $scope, $scope.handleGameOver);
 
     // UI GAME INTERACTION ----------------------------------
 
@@ -210,7 +221,7 @@ define(['game/events', 'game/data'], function (events, data) {
       if ($scope.board.state === state.MOVE_AGENTS) {
         $scope.moveAgentDelta(delta);
         $scope.sendMessage(events.moveAgent, {name: $scope.info.name, delta: delta, agents: $scope.board.agents});
-        $scope.$root.$broadcast('turn:move', delta);
+        $scope.$root.$broadcast('turn:move', {name: $scope.info.name, delta: delta});
       }
     };
 

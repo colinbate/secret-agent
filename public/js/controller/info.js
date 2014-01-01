@@ -1,11 +1,24 @@
-define(['game/events'], function (events) {
+define(['game/events', 'game/data'], function (events, data) {
   'use strict';
 
   var infoController = function ($scope, $window) {
+    var randomInt = function (max, min) {
+          return parseInt(Math.floor(Math.random() * (max - min + 1) + min), 10);
+        };
+
+    $scope.opts = {
+      extraAgents: 2,
+      safeLocation: 7
+    };
+    $scope.randomSafe = false;
+
     // UI ACTIONS -------------------------------------------
 
     $scope.startPlaying = function () {
-      $scope.$root.$broadcast('game:start');
+      if ($scope.randomSafe) {
+        $scope.opts.safeLocation = randomInt(data.locations.length - 1, 1);
+      }
+      $scope.$root.$broadcast('game:start', $scope.opts);
     };
 
     $scope.submitName = function () {
@@ -20,7 +33,7 @@ define(['game/events'], function (events) {
     };
 
     $scope.fullUrl = function () {
-      return $window.location.protocol + '//' + $window.location.host + '/' + $scope.info.id;
+      return $window.location.protocol + '//' + $window.location.host + '/#' + $scope.info.id;
     };
   };
   infoController.$inject = ['$scope', '$window'];
