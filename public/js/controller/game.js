@@ -11,6 +11,10 @@ define(['game/data', 'game/events'], function (data, events) {
       agents: [],
     };
 
+    $scope.game = {
+      message: ''
+    };
+
     $scope.getAgent = function (index) {
       if (!data.agents || data.agents.length <= index) {
         $scope.setError('Trying to access agent ' + index + ' which does not exist');
@@ -41,6 +45,10 @@ define(['game/data', 'game/events'], function (data, events) {
 
     $scope.setError = function (msg) {
       console.log(msg);
+    };
+
+    $scope.setHelp = function (msg) {
+      $scope.game.message = msg;
     };
 
     $scope.getMe = function () {
@@ -85,6 +93,9 @@ define(['game/data', 'game/events'], function (data, events) {
     $scope.handleNewTurn = function (msg) {
       if ($scope.isMe(msg.name)) {
         $scope.sendMessage(events.rollDie, {name: msg.name});
+        $scope.setHelp('Your turn! Click the agents to move them');
+      } else {
+        $scope.setHelp('Waiting for ' + msg.name + '...');
       }
     };
 
