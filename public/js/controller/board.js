@@ -13,7 +13,7 @@ define(['game/events', 'game/data'], function (events, data) {
         getTrack = function (max) {
           var track = [], tt;
           for (tt = 0; tt <= max; tt += 1) {
-            track.push(tt);
+            track.push({score: tt, counters: []});
           }
           return track;
         };
@@ -53,6 +53,43 @@ define(['game/events', 'game/data'], function (events, data) {
       }
     };
 
+    $scope.addCounterToTile = function (agent, pos) {
+      if (typeof pos === 'undefined' && agent.length) {
+        pos = agent[1];
+        agent = agent[0];
+      }
+      if (pos < 0) {
+        pos = 0;
+      } else if (pos >= $scope.board.track.length) {
+        pos = $scope.board.track.length - 1;
+      }
+      $scope.board.track[pos].counters.push($scope.getAgent(agent));
+    };
+
+    $scope.removeCounterFromTile = function (agent, pos) {
+      var ii;
+      if (typeof pos === 'undefined' && agent.length) {
+        pos = agent[1];
+        agent = agent[0];
+      }
+      for (ii = 0; ii < $scope.board.track[pos].counters.length; ii += 1) {
+        if ($scope.board.track[pos].counters[ii].id === agent) {
+          $scope.board.track[pos].counters.splice(ii, 1);
+          break;
+        }
+      }
+    };
+
+    $scope.moveAllCountersToTile = function (pos) {
+      var ii;
+      for (ii = 0; ii < $scope.board.track.length; ii += 1) {
+        $scope.board.track[ii].counters = [];
+      }
+      for (ii = 0; ii < $scope.board.agents.length; ii += 1) {
+        $scope.addCounterToTile($scope.board.agents[ii][0], pos);
+      }
+    };
+
     $scope.moveAgentDelta = function (delta) {
       var ii;
       for (ii = 0; ii < $scope.board.agents.length; ii += 1) {
@@ -79,15 +116,24 @@ define(['game/events', 'game/data'], function (events, data) {
       var ii, pts;
       for (ii = 0; ii < $scope.board.counters.length; ii += 1) {
         pts = $scope.getLocation($scope.board.agents[ii][1]).points;
+        $scope.removeCounterFromTile($scope.board.counters[ii][0], $scope.board.counters[ii][1]);
         $scope.board.counters[ii][1] += pts;
         if ($scope.board.counters[ii][1] < 0) {
           $scope.board.counters[ii][1] = 0;
         }
+        $scope.addCounterToTile($scope.board.counters[ii][0], $scope.board.counters[ii][1]);
       }
     };
 
     $scope.setCounters = function (counters) {
+      var ii;
+      for (ii = 0; ii < $scope.board.counters.length; ii += 1) {
+        $scope.removeCounterFromTile($scope.board.counters[ii]);
+      }
       $scope.board.counters = counters;
+      for (ii = 0; ii < $scope.board.counters.length; ii += 1) {
+        $scope.addCounterToTile($scope.board.counters[ii]);
+      }
     };
 
     $scope.haveAgentsFinished = function () {
@@ -112,6 +158,7 @@ define(['game/events', 'game/data'], function (events, data) {
         $scope.board.agents.push(getMarker(msg.agents[aidx]));
       }
       $scope.moveAllAgentsToLocation(0);
+      $scope.moveAllCountersToTile(0);
     };
 
     $scope.handleNewTurn = function () {
@@ -185,6 +232,15 @@ define(['game/events', 'game/data'], function (events, data) {
       }
       return classes;
     };
+
+    $scope.tileState = function (index) {
+      var classes = [];
+      classes.push('track-' + index);
+      if ($scope.board.track[index].counters.length > 4) {
+        classes.push('many');
+      }
+      return classes;
+    }
 
     // GAME FLOW LOGIC --------------------------------------
 
