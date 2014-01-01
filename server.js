@@ -47,7 +47,7 @@ var Primus = require('primus'),
       startGame: function (msg, spark, game) {
         var players = msg.players,
             playerCount = players.length,
-            toRemove = Math.max(0, 5 - players.length), remInd,
+            toRemove = Math.max(0, (7 - (msg.opts.extraAgents || 2)) - players.length), remInd,
             agents = [0,1,2,3,4,5,6],
             pool;
         players.sort(function () { return 0.5 - Math.random(); });
@@ -72,7 +72,7 @@ var Primus = require('primus'),
             aIdx = randomInt(pool.length - 1, 0);
             agent = pool[aIdx];
             pool.splice(aIdx, 1);
-            payload = {action:'startGame', playOrder: players, agents: agents, you: agent};
+            payload = {action:'startGame', playOrder: players, opts: msg.opts, agents: agents, you: agent};
             socket = primus.connections[list[idx]];
             if (socket) {
               //console.log(require('util').inspect(socket));

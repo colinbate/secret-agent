@@ -52,6 +52,14 @@
       </div>
       <div class="game-url"><a href="/#{{info.id}}" ng-bind="fullUrl()"></a></div>
       <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
+      <div class="waiting-start">Waiting for game owner to start game...</div>
+      <div class="advanced-options">
+        <a href="#" ng-click="openOptions=!openOptions">Change game play options?</a>
+        <div class="opts" ng-class="{'shown': openOptions}">
+          <label>Number of extra agents <input type="number" size="3" min="1" max="5" ng-model="opts.extraAgents"></label>
+          <label>Random safe starting location? <input type="checkbox" ng-model="randomSafe"></label>
+        </div>
+      </div>
     </div>
     <div class="overlay"></div>
     <script data-main="/js/main.js" src="/lib/require.js"></script>

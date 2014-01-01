@@ -1,31 +1,37 @@
-.info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .game-board, .player-agent {
+.info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .player-agent,
+.board-locations, .board-track, .advanced-options, .overlay, .waiting-start {
 	display: none;
 }
 
 body.initial {
-	
+	.game-board {
+		display: none;
+	}
 }
 
 body.provide-name {
-	.info-collection, .name-entry {
+	.overlay, .info-collection, .name-entry {
 		display: block;
 	}
 }
 
 body.awaiting-players {
-	.info-collection, .game-url {
+	.overlay, .info-collection, .waiting-start {
 		display: block;
 	}
 }
 
 body.awaiting-players.master-role {
-	.get-started {
+	.get-started, .game-url, .advanced-options {
 		display: block;
+	}
+	.waiting-start {
+		display: none;
 	}
 }
 
 body.playing {
-	.my-agent, .die, .game-board {
+	.my-agent, .die, .game-board, .board-locations, .board-track {
 		display: block;
 	}
 }
@@ -34,7 +40,7 @@ body.game-over {
 	.player-agent {
 		display: inline;
 	}
-	.my-agent, .game-board {
+	.my-agent, .game-board, .board-locations, .board-track {
 		display: block;
 	}
 }
@@ -61,4 +67,11 @@ body.game-over {
 	}
 }
 
+.advanced-options .opts {
+	display: none;
+}
+
+.advanced-options .opts.shown {
+	display: block;
+}
 

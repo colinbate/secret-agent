@@ -32,16 +32,20 @@ define(['game/events'], function (events) {
       $scope.addPlayer(name);
     });
 
-    $scope.$on('game:start', function () {
-      $scope.sendStartGame();
+    $scope.$on('game:start', function (e, opts) {
+      $scope.sendStartGame(opts);
     });
 
     $scope.$on('turn:all:end', function () {
       $scope.sendNewTurn();
     });
 
-    $scope.$on('turn:move', function (e, delta) {
-      $scope.handleMoveAgent({delta: delta});
+    $scope.$on('turn:move', function (e, info) {
+      $scope.handleMoveAgent(info);
+    });
+
+    $scope.$on('turn:move:file:other', function () {
+      $scope.announceRemoteFileMove();
     });
 
     // INTERNAL STATE MANAGEMENT ----------------------------
@@ -52,9 +56,9 @@ define(['game/events'], function (events) {
 
     // GAME FLOW MANAGEMENT ---------------------------------
 
-    $scope.sendStartGame = function () {
+    $scope.sendStartGame = function (opts) {
       if ($scope.isMaster()) {
-        $scope.sendMessage(events.startGame, {players: $scope.players.list});
+        $scope.sendMessage(events.startGame, {players: $scope.players.list, opts: opts});
       }
     };
 
@@ -62,6 +66,21 @@ define(['game/events'], function (events) {
       if ($scope.isMaster()) {
         $scope.sendMessage(events.newTurn, {name: $scope.players.list[nextPosition()].name}, true);
       }
+    };
+
+    $scope.announceRemoteFileMove = function () {
+      $scope.setHelp('Points tallied...<br>' + $scope.players.current.name + ' is moving the safe.');
+    };
+
+    $scope.checkIfWinner = function (winners) {
+      var ii;
+      for (ii = 0; ii < winners.length; ii += 1) {
+        if ($scope.info.agent === winners[ii]) {
+          $scope.setHelp('You won!!');
+          return;
+        }
+      }
+      $scope.setHelp('Sorry, you didn\'t win this time...');
     };
 
     // MESSAGE HANDLERS -------------------------------------
@@ -121,15 +140,24 @@ define(['game/events'], function (events) {
         return;
       }
       if ($scope.players.current.remaining === 0) {
-        $scope.setHelp('Great, all done.');
+        if ($scope.isMe(msg.name)) {
+          $scope.setHelp('Great, all done.');
+        } else {
+          $scope.setHelp(msg.name + ' has finished moving.');
+        }
         $scope.$root.$broadcast('turn:moving:end');
       } else {
-        $scope.setHelp('Good, only ' + $scope.players.current.remaining + ' more...' );
+        if ($scope.isMe(msg.name)) {
+          $scope.setHelp('Good, only ' + $scope.players.current.remaining + ' more...' );
+        } else {
+          $scope.setHelp(msg.name + ' has ' + $scope.players.current.remaining + ' more.');
+        }
       }
     };
 
     $scope.handleGameOver = function (msg) {
       $scope.players.winners = msg.winners;
+      $scope.checkIfWinner(msg.winners);
       $scope.handleRevealSelf({name: $scope.info.name, agent: $scope.info.agent});
     };
 
