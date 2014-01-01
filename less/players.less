@@ -1,13 +1,13 @@
 .player-info {
 	position: absolute;
-	top: 0;
-	right: 10px;
+	top: 0.5em;
+	right: 1em;
 }
 
 .player-list {
 	list-style: none;
 	padding: 0;
-	width: 200px;
+	width: 250px;
 
 	li {
 		padding: 4px;
@@ -16,11 +16,16 @@
 
 .current-turn {
 	background-color: #ccc;
+	&:after {
+		content: " (playing)";
+	}
 }
 
 .viewing-player {
 	font-weight: bold;
-	font-style: italic;
+	&:after {
+		content: " (you)";
+	}
 }
 
 .winning-player {

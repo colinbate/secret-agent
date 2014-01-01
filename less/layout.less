@@ -68,7 +68,7 @@ header {
 		color: @color-links-light;
 	}	
 
-	input {
+	input[type="text"] {
 		box-sizing: border-box;
 		width: 100%;
 		font-size: 32px;
@@ -76,6 +76,11 @@ header {
 		border: 0;
 		background-color: #ddd;
 		margin-bottom: 0.5em;
+	}
+
+	label {
+		display: block;
+		margin-top: 1em;
 	}
 
 	button {
@@ -88,6 +93,10 @@ header {
 
 	.waiting-start {
 		text-align: center;
+	}
+
+	.advanced-options {
+		margin-top: 1em;
 	}
 
 	.game-url {
