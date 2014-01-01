@@ -5,10 +5,10 @@
 @spaceBR: 29;
 @spaceBL: 42;
 
-@boxWidth: 72px;
-@boxHeight: 76px;
-@offX: 15px;
-@offY: 9px;
+@boxWidth: 71.6px;
+@boxHeight: 77px;
+@offX: 14px;
+@offY: 8px;
 
 // LEFT SIDE
 .counterLoop (@index) when (@index < @spaceTL) {
@@ -56,7 +56,7 @@
   @dy: @spaceBR - @spaceTR;
   .track-@{index} {
     top: @dy * @boxHeight + @offY;
-    left: @dx * @boxWidth + @offY;
+    left: @dx * @boxWidth + @offX;
     &:before {
       content: "@{index}"
     }
@@ -67,9 +67,25 @@
 .counterLoop(0);
 
 .track {
-	background-color: rgba(255, 255, 255, 0.6);
+	//background-color: rgba(255, 255, 255, 0.6);
 	width: 69px;
 	height: 69px;
 	position: absolute;
 	list-style: none;
+
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.3em;
+  }
+
+  .counters {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+    width: 100%;
+  }
 }

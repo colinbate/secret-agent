@@ -25,7 +25,11 @@
               </li>
             </ul>
             <ul class="board-track">
-              <li ng-repeat="tile in board.track" class="track" ng-class="'track-'+tile"></li>
+              <li ng-repeat="tile in board.track" class="track" ng-class="tileState($index)">
+                <div class="counters">
+                  <div class="counter" ng-repeat="cnt in tile.counters" ng-class="cnt.card"></div>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
