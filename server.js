@@ -143,7 +143,9 @@ primus.on('connection', function (spark) {
 
 primus.on('disconnection', function (spark) {
   var game = spark.query && spark.query.game;
-  console.log(spark.id + ' disconnected from ' + game);
+  if (game !== undefined) {
+    spark.room(game).write({action:'left', id: spark.id});
+  }
 });
 
 server.listen(9000);
