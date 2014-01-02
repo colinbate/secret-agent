@@ -6,12 +6,13 @@ var Primus = require('primus'),
     http = require('http'),
     nodestatic = require('node-static'),
     uuid = require('uuid'),
-    file = new nodestatic.Server('./public', {cache: false, headers: {'Cache-Control': 'no-cache, must-revalidate'}}),
-    server = http.createServer(function (request, response) {
+    selfHost = process.argv.length > 2 && process.argv[2] === 'selfhost',
+    file = selfHost ? new nodestatic.Server('./public', {cache: false, headers: {'Cache-Control': 'no-cache, must-revalidate'}}) : null,
+    server = selfHost ? http.createServer(function (request, response) {
       request.addListener('end', function () {
           file.serve(request, response);
       }).resume();
-    }),
+    }) : http.createServer(),
     primus = new Primus(server, {
       transformer: 'socket.io'
     }),
@@ -23,7 +24,7 @@ var Primus = require('primus'),
         if (game) {
           msg.source = spark.id;
           primus.room(game + '-master').write(msg);
-          console.log('Said hello to room: ' + game + '-master');
+          //console.log('Said hello to room: ' + game + '-master');
         }
       },
       masterJoin: function (msg, spark, game) {
@@ -60,7 +61,7 @@ var Primus = require('primus'),
 
         spark.room(game).clients(function (err, list) {
           var idx, agent, aIdx, payload, socket;
-          console.log('Found ' + list.length + ' connected clients.');
+          //console.log('Found ' + list.length + ' connected clients.');
           list.reverse();
           if (list.length > playerCount) {
             // Too many clients vs players.
@@ -68,7 +69,7 @@ var Primus = require('primus'),
             list.splice(playerCount, list.length - playerCount);
           }
           for (idx = 0; idx < list.length; idx += 1) {
-            console.log('Client id: ' + list[idx]);
+            //console.log('Client id: ' + list[idx]);
             aIdx = randomInt(pool.length - 1, 0);
             agent = pool[aIdx];
             pool.splice(aIdx, 1);
@@ -77,7 +78,7 @@ var Primus = require('primus'),
             if (socket) {
               //console.log(require('util').inspect(socket));
               process.nextTick(function (p) {
-                console.log(require('util').inspect(p));
+                //console.log(require('util').inspect(p));
                 socket.write.call(socket, p);
               }.bind(null, payload));
             } else {
