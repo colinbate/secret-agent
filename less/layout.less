@@ -2,6 +2,11 @@ html, body {
 	min-height: 100%;
 }
 
+* {	
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
 body {
 	font-family: @font-text;
 	font-size: @font-size-base;
@@ -36,8 +41,6 @@ header {
 		margin: 0 0 0 1024px;
 		font-size: 18px;
 		padding: 10px;
-		box-sizing: border-box;
-		-moz-box-sizing: border-box;
 		height: 41px;
 	}
 }
@@ -52,28 +55,50 @@ header {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0,0,0,0.6);
+	background-color: lighten(@color-content-dark, 20%);
 	z-index: 10;
 }
 
 .info-collection {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	width: 500px;
-	height: 270px;
-	margin: -135px 0 0 -250px;
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	right: 10%;
+	min-height: 80%;
+	margin: 0;
 	background-color: rgba(0, 0, 0, 0.5);
-	padding: 1em;
+	padding: 2em;
 	z-index: 15;
 	color: @color-base-page;
+
+	.cutout {
+		color: lighten(@color-content-dark, 40%);
+		text-transform: uppercase;
+		font-style: italic;
+		font-weight: bold;
+		position: absolute;
+		top: -0.35em;
+		left: 1em;
+		font-size: 60px;
+		font-family: @font-header;
+	}
+
+	.intro-instructions {
+		float: left;
+		width: 47%;
+		max-height: 100%;
+		overflow: auto;
+	}
+
+	.game-controls {
+		margin-left: 53%;
+	}
 
 	a {
 		color: @color-links-light;
 	}	
 
 	input[type="text"] {
-		box-sizing: border-box;
 		width: 100%;
 		font-size: 32px;
 		padding: 0.4em;
@@ -94,9 +119,15 @@ header {
 		background-color: green;
 		color: white;
 	}
-	
+
 	.waiting-start {
-		text-align: center;
+		li {
+			font-size: 18px;
+			margin-bottom: 3px;
+		}
+		ul {
+			padding-left: 1em;
+		}
 	}
 
 	.advanced-options {
