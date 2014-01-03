@@ -3,10 +3,10 @@ define(['game/events'], function (events) {
 
   var playerController = function ($scope) {
     var validateNewPlayer = function () {
-          if ($scope.players.list.length === 7) {
-            $scope.sendMessage(events.cannotJoin, {reason: 'full'});
-            return;
+          if ($scope.players.list.length === 7 || $scope.info.state > 2) {
+            return false;
           }
+          return true;
         },
         nextPosition = function () {
           return ($scope.players.current.position + 1) % $scope.players.list.length;
@@ -105,8 +105,9 @@ define(['game/events'], function (events) {
       if (!$scope.isMaster()) {
         return;
       }
-      validateNewPlayer();
-      $scope.sendMessage(events.identify, {names: $scope.players.list, dest: msg.source});
+      if (validateNewPlayer()) {
+        $scope.sendMessage(events.identify, {names: $scope.players.list, dest: msg.source});
+      }
     };
 
     $scope.handleIdentify = function (msg) {
@@ -117,11 +118,12 @@ define(['game/events'], function (events) {
     };
 
     $scope.handleJoin = function (msg) {
-      if ($scope.players.list.length === 7) {
+      if ($scope.players.list.length === 7 ) {
         return;
       }
-      validateNewPlayer();
-      $scope.addPlayer(msg.name);
+      if (validateNewPlayer()) {
+        $scope.addPlayer(msg.name);
+      }
     };
 
     $scope.handleStartGame = function (msg) {
