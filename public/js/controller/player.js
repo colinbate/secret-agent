@@ -74,7 +74,7 @@ define(['game/events'], function (events) {
 
     $scope.sendStartGame = function (opts) {
       if ($scope.isMaster()) {
-        $scope.sendMessage(events.startGame, {players: $scope.players.list, opts: opts});
+        $scope.sendMessage(events.startGame, {players: $scope.players.list, opts: opts || {}});
       }
     };
 
@@ -117,11 +117,11 @@ define(['game/events'], function (events) {
     };
 
     $scope.handleJoin = function (msg) {
+      if ($scope.players.list.length === 7) {
+        return;
+      }
       validateNewPlayer();
       $scope.addPlayer(msg.name);
-      if ($scope.players.list.length === 7) {
-        $scope.sendStartGame();
-      }
     };
 
     $scope.handleStartGame = function (msg) {
