@@ -77,10 +77,10 @@ var Primus = require('primus'),
             socket = primus.connections[list[idx]];
             if (socket) {
               //console.log(require('util').inspect(socket));
-              process.nextTick(function (p) {
-                //console.log(require('util').inspect(p));
-                socket.write.call(socket, p);
-              }.bind(null, payload));
+              socket.write.call(socket, 'ignore');
+              console.log('Sending to ' + socket.id + ':');
+              console.log(require('util').inspect(payload));
+              socket.write.call(socket, payload);
             } else {
               console.error('No socket for ' + list[idx]);
             }
@@ -122,7 +122,7 @@ primus.on('connection', function (spark) {
     var send = function () {
           spark.room(game).write(message);
         };
-    console.log('Received message on server: ' + message.action);
+    console.log('Received message on server: ' + message.action + ' from ' + spark.id);
     if (message && interceptors[message.action]) {
       interceptors[message.action].call(null, message, spark, game);
       return;
