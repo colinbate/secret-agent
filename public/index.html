@@ -7,12 +7,6 @@
   </head>
   <body ng-controller="GameController" ng-class="gameState()">
     <div class="content">
-      <header role="banner">
-        <h1>Secret Agent</h1>
-      </header>
-      <nav role="navigation">
-
-      </nav>
       <div class="game-window">
         <div class="game-board" ng-controller="BoardController" ng-class="boardState()">
           <div class="board-wrapper">
@@ -31,16 +25,22 @@
                 </div>
               </li>
             </ul>
+            <div class="die-pit" ng-class="currentDieValue()"></div>
             <div class="game-messages ng-cloak"><span ng-bind-html="getHelp()"></span></div>
           </div>
         </div>
+        <header role="banner">
+          <h1>Secret Agent</h1>
+          <nav role="navigation">
+          </nav>
+        </header>
         <div class="player-info" ng-controller="PlayerController">
-          <h3>Connected Players</h3>
           <ul class="player-list">
-            <li ng-repeat="p in players.list" ng-class="playerClass(p)" class="ng-cloak">{{p.name}} <span class="player-agent">{{p.agent.name}}</span></li>
+            <li ng-repeat="p in players.list" ng-class="playerClass(p)" class="ng-cloak">
+              <span class="name">{{p.name}}</span>
+              <span class="hold-die" ng-class="currentPlayerDie(p)"></span>
+            </li>
           </ul>
-          <div class="die-pit" ng-class="currentDieValue()"></div>
-          <div class="agent-card my-agent" ng-class="myAgent().card"></div>
         </div>
       </div>
       <div class="chat-window" ng-controller="ChatController">

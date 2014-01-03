@@ -54,6 +54,22 @@ define(['game/events'], function (events) {
       $scope.players.list.push({name: name});
     };
 
+    $scope.setAgentForPlayer = function (name, agent, winners) {
+      var ii, jj;
+      for (ii = 0; ii < $scope.players.list.length; ii += 1) {
+        if ($scope.players.list[ii].name === name) {
+          $scope.players.list[ii].agent = $scope.getAgent(agent);
+          for (jj = 0; jj < winners.length; jj += 1) {
+            if (winners[jj] === agent) {
+              $scope.players.list[ii].winner = true;
+              break;
+            }
+          }
+          break;
+        }
+      }
+    };
+
     // GAME FLOW MANAGEMENT ---------------------------------
 
     $scope.sendStartGame = function (opts) {
@@ -111,6 +127,7 @@ define(['game/events'], function (events) {
     $scope.handleStartGame = function (msg) {
       // you, playOrder, agents
       $scope.players.list = msg.playOrder;
+      $scope.setAgentForPlayer($scope.info.name, msg.you, []);
       if ($scope.isMaster()) {
         if (!msg.playOrder || msg.playOrder.length === 0) {
           console.warn('No players specified in startGame!');
@@ -158,23 +175,11 @@ define(['game/events'], function (events) {
     $scope.handleGameOver = function (msg) {
       $scope.players.winners = msg.winners;
       $scope.checkIfWinner(msg.winners);
-      $scope.handleRevealSelf({name: $scope.info.name, agent: $scope.info.agent});
+      //$scope.handleRevealSelf({name: $scope.info.name, agent: $scope.info.agent});
     };
 
     $scope.handleRevealSelf = function (msg) {
-      var ii, jj;
-      for (ii = 0; ii < $scope.players.list.length; ii += 1) {
-        if ($scope.players.list[ii].name === msg.name) {
-          $scope.players.list[ii].agent = $scope.getAgent(msg.agent);
-          for (jj = 0; jj < $scope.players.winners.length; jj += 1) {
-            if ($scope.players.winners[jj] === msg.agent) {
-              $scope.players.list[ii].winner = true;
-              break;
-            }
-          }
-          break;
-        }
-      }
+      $scope.setAgentForPlayer(msg.name, msg.agent, $scope.players.winners);
     };
 
     events.onMessage(events.hello, $scope, $scope.handleHello);
@@ -200,6 +205,10 @@ define(['game/events'], function (events) {
       if (player.winner) {
         classes.push('winning-player');
       }
+      if (player.agent) {
+        classes.push('agent-card');
+        classes.push(player.agent.card);
+      }
       return classes;
     };
 
@@ -208,9 +217,10 @@ define(['game/events'], function (events) {
       return me.agent || {};
     };
 
-    $scope.currentDieValue = function () {
+    $scope.currentPlayerDie = function (player) {
       var classes = [];
-      if ($scope.players.current.rolled && $scope.players.current.remaining) {
+      if ($scope.players.current && $scope.players.current.name === player.name &&
+        $scope.players.current.rolled && $scope.players.current.remaining) {
         classes.push('die');
         classes.push($scope.getDieClass($scope.players.current.rolled));
       }
