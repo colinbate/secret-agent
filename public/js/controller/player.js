@@ -29,7 +29,11 @@ define(['game/events'], function (events) {
     // EVENT HANDLING ---------------------------------------
 
     $scope.$on('player:add', function (e, name) {
-      $scope.addPlayer(name);
+      $scope.addPlayer(name, undefined, $scope.info.role);
+    });
+
+    $scope.$on('player:add:id', function (e, info) {
+      $scope.setPlayerField(info.name, info.id, 'id');
     });
 
     $scope.$on('game:start', function (e, opts) {
@@ -50,8 +54,38 @@ define(['game/events'], function (events) {
 
     // INTERNAL STATE MANAGEMENT ----------------------------
 
-    $scope.addPlayer = function (name) {
-      $scope.players.list.push({name: name});
+    $scope.addPlayer = function (name, id, role) {
+      $scope.players.list.push({name: name, id: id, role: role});
+    };
+
+    $scope.setPlayerField = function (name, value, field) {
+      var ii;
+      for (ii = 0; ii < $scope.players.list.length; ii += 1) {
+        if ($scope.players.list[ii].name === name) {
+          $scope.players.list[ii][field] = value;
+          break;
+        }
+      }
+    };
+
+    $scope.removePlayerById = function (id) {
+      return $scope.removePlayerBy('id', id);
+    };
+
+    $scope.removePlayerByName = function (name) {
+      return $scope.removePlayerBy('name', name);
+    };
+
+    $scope.removePlayerBy = function (field, value) {
+      var ii;
+      for (ii = 0; ii < $scope.players.list.length; ii += 1) {
+        if ($scope.players.list[ii][field] === value) {
+          if ($scope.players.current.position >= ii) {
+            $scope.players.current.position -= 1;
+          }
+          return $scope.players.list.splice(ii, 1)[0];
+        }
+      }
     };
 
     $scope.setAgentForPlayer = function (name, agent, winners) {
@@ -122,8 +156,31 @@ define(['game/events'], function (events) {
         return;
       }
       if (validateNewPlayer()) {
-        $scope.addPlayer(msg.name);
+        $scope.addPlayer(msg.name, msg.id, 'player');
       }
+    };
+
+    $scope.handleLeft = function (msg) {
+      var departed = $scope.removePlayerById(msg.id);
+      if ($scope.players.list.length === 1) {
+        // Only one left :(
+        $scope.setHelp('Game over. Everyone else left.');
+        $scope.info.state = 4;
+        $scope.$root.$broadcast('game:over');
+      } else {
+        if (departed.role === 'master' && $scope.isMe($scope.players.list[nextPosition()].name)) {
+          // I will inherit the master role!
+          $scope.info.role = 'master';
+          $scope.sendMessage(events.promote, {name: $scope.info.name});
+        }
+        if ($scope.players.current.name === departed.name) {
+          $scope.sendNewTurn();
+        }
+      }
+    };
+
+    $scope.handlePromote = function (msg) {
+      $scope.setPlayerField(msg.name, 'master', 'role');
     };
 
     $scope.handleStartGame = function (msg) {
@@ -187,6 +244,8 @@ define(['game/events'], function (events) {
     events.onMessage(events.hello, $scope, $scope.handleHello);
     events.onMessage(events.identify, $scope, $scope.handleIdentify);
     events.onMessage(events.join, $scope, $scope.handleJoin);
+    events.onMessage(events.promote, $scope, $scope.handlePromote);
+    events.onMessage(events.left, $scope, $scope.handleLeft);
     events.onMessage(events.startGame, $scope, $scope.handleStartGame);
     events.onMessage(events.newTurn, $scope, $scope.handleNewTurn);
     events.onMessage(events.rolledDie, $scope, $scope.handleRolledDie);

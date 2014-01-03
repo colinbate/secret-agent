@@ -70,9 +70,10 @@ define(['game/data', 'game/events'], function (data, events) {
 
     // MESSAGE HANDLERS -------------------------------------
 
-    $scope.handleGameCreated = function () {
+    $scope.handleGameCreated = function (msg) {
       $scope.info.state = 2;
       $scope.newGameAttempts = 0;
+      $scope.$root.$broadcast('player:add:id', {name: $scope.info.name, id: msg.pid});
     };
 
     $scope.handleCannotCreate = function (msg) {

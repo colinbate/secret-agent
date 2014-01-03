@@ -26,7 +26,7 @@ var Primus = require('primus'),
           }
           spark.join(game);
           spark.join(game + '-master');
-          spark.write({action:'gameCreated', id: game});
+          spark.write({action:'gameCreated', id: game, pid: spark.id});
       },
       hello: function (msg, spark, game) {
         if (game) {
@@ -115,8 +115,8 @@ primus.on('connection', function (spark) {
       interceptors[message.action].call(null, message, spark, game);
       return;
     }
-    if (~spark.rooms().indexOf(game + '-' + spark.id)) {
-      spark.leave(game + '-' + spark.id);
+    if (message && message.action === 'join') {
+      message.id = spark.id;
     }
     // check if spark is already in this room
     if (~spark.rooms().indexOf(game)) {

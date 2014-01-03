@@ -289,6 +289,10 @@ define(['game/events', 'game/data'], function (events, data) {
       $scope.doEndMovingCheck();
     });
 
+    $scope.$on('game:over', function () {
+      $scope.handleGameOver();
+    });
+
   };
   boardController.$inject = ['$scope'];
   boardController.ctrlName = 'BoardController';

@@ -12,6 +12,7 @@ define([], function () {
     identify: 'identify',
     join: 'join',
     left: 'left',
+    promote: 'promote',
     startGame: 'startGame',
     rollDie: 'rollDie',
     rolledDie: 'rolledDie',
