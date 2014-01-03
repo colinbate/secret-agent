@@ -1,5 +1,6 @@
 .info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .player-agent,
-.board-locations, .board-track, .advanced-options, .overlay, .waiting-start {
+.board-locations, .board-track, .advanced-options, .overlay, .waiting-start, .info-error-message,
+.initial-join-message {
 	display: none;
 }
 
@@ -9,6 +10,26 @@ body.initial {
 
 body.provide-name {
 	.overlay, .info-collection, .name-entry {
+		display: block;
+	}
+	.info-collection {
+		&.init .name-entry, &.error .name-entry {
+			display: none;
+		}
+		&.error .info-error-message {
+			display: block;
+		}
+	}
+}
+
+body.provide-name.master-role {
+	.info-collection.init .name-entry {
+		display: block;
+	}
+}
+
+body.provide-name.player-role {
+	.init .initial-join-message {
 		display: block;
 	}
 }
@@ -72,4 +93,3 @@ body.game-over {
 .advanced-options .opts.shown {
 	display: block;
 }
-

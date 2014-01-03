@@ -141,6 +141,9 @@ define(['game/events'], function (events) {
       }
       if (validateNewPlayer()) {
         $scope.sendMessage(events.identify, {names: $scope.players.list, dest: msg.source});
+      } else if ($scope.info.state > 2) {
+        // Game in progress
+        $scope.sendMessage(events.cannotJoin, {reason: 'in progress', dest: msg.source});
       }
     };
 
@@ -152,9 +155,6 @@ define(['game/events'], function (events) {
     };
 
     $scope.handleJoin = function (msg) {
-      if ($scope.players.list.length === 7 ) {
-        return;
-      }
       if (validateNewPlayer()) {
         $scope.addPlayer(msg.name, msg.id, 'player');
       }

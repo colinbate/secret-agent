@@ -46,11 +46,13 @@
       <div class="chat-window" ng-controller="ChatController">
       </div>
     </div>
-    <div class="info-collection" ng-controller="InfoController">
-      <div class="name-entry">
+    <div class="info-collection" ng-controller="InfoController" ng-class="stateClass()">
+      <div class="name-entry" ng-class="{'cannot-join': cannotJoin}">
         <input type="text" placeholder="Enter your name" ng-model="info.name">
         <button ng-click="submitName()">Play</button>
       </div>
+      <div class="initial-join-message">Checking on your game...</div>
+      <div class="info-error-message" ng-class="{'cannot-join': cannotJoin}">Unfortunately the game you are trying to join is already in progress. Why not <a href="/">create a new one?</a></div>
       <div class="game-url"><a href="/#{{info.id}}" ng-bind="fullUrl()"></a></div>
       <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
       <div class="waiting-start">Waiting for game owner to start game...</div>
