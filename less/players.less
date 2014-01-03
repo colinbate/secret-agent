@@ -1,30 +1,44 @@
 .player-info {
-	position: absolute;
-	top: 0.5em;
-	right: 1em;
+	position: relative;
+	margin-left: 1024px;
 }
 
 .player-list {
 	list-style: none;
 	padding: 0;
-	width: 250px;
+	margin: 0;
 
 	li {
-		padding: 4px;
+		padding: 0.5em 1em;
+		position: relative;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		height: 95px;
+		border-bottom: 1px solid @color-content-dark;
+		overflow: hidden;
+	}
+
+	.hold-die {
+		position: absolute;
+		top: 10px;
+		right: 1em;
 	}
 }
 
 .current-turn {
-	background-color: #ccc;
-	&:after {
+	.name:after {
 		content: " (playing)";
 	}
 }
 
 .viewing-player {
 	font-weight: bold;
-	&:after {
+	.name:after {
 		content: " (you)";
+	}
+
+	.player-agent {
+		display: block;
 	}
 }
 
@@ -40,35 +54,49 @@
 }
 
 .agent-card {
-	background: #fff url(/img/agent-cards.jpg) 0 0 no-repeat;
-	width: 140px;
-	height: 210px;
 
-	&.mr-gray {
+	&:after {
+		content: "";
+		position: absolute;
+		top: 40px;
+		left: 10px;
+		background: #fff url(/img/agent-cards.jpg) 0 0 no-repeat;
+		width: 140px;
+		height: 210px;
+		-webkit-transition: top 0.5s ease 0.3s;
+		-moz-transition: top 0.5s ease 0.3s;
+		transition: top 0.5s ease 0.3s;
+	}
+
+	&:hover:after {
+		top: 6px;
+	}
+
+	&.mr-gray:after {
 		background-position: -11px -13px;
 	}
 
-	&.mr-blue {
+	&.mr-blue:after {
 		background-position: -152px -13px;
 	}
 
-	&.mr-red {
+	&.mr-red:after {
 		background-position: -295px -13px;
 	}
 
-	&.mr-purple {
+	&.mr-purple:after {
 		background-position: -11px -227px;
 	}
 
-	&.mr-green {
+	&.mr-green:after {
 		background-position: -152px -227px;
 	}
 
-	&.mr-yellow {
+	&.mr-yellow:after {
 		background-position: -295px -227px;
 	}
 
-	&.mr-orange {
+	&.mr-orange:after {
 		background-position: -152px -443px;
 	}
 }
