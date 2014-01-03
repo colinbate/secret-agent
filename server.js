@@ -18,6 +18,15 @@ var Primus = require('primus'),
     randomInt = function (max, min) {
       return parseInt(Math.floor(Math.random() * (max - min + 1) + min), 10);
     },
+    sendDirect = function (msg, spark, game) {
+      var socket;
+      if (game && msg.dest) {
+        socket = primus.connections[msg.dest];
+        if (socket) {
+          socket.write(msg);
+        }
+      }
+    },
     interceptors = {
       newGame: function (msg, spark, game) {
           if (!spark.isRoomEmpty(game)) {
@@ -35,15 +44,8 @@ var Primus = require('primus'),
           //console.log('Said hello to room: ' + game + '-master');
         }
       },
-      identify: function (msg, spark, game) {
-        var socket;
-        if (game && msg.dest) {
-          socket = primus.connections[msg.dest];
-          if (socket) {
-            socket.write(msg);
-          }
-        }
-      },
+      identify: sendDirect,
+      cannotJoin: sendDirect,
       startGame: function (msg, spark, game) {
         var players = msg.players,
             playerCount = players.length,
