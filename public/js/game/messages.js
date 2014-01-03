@@ -1,4 +1,4 @@
-define(['primus', 'game/events'], function (Primus, events) {
+define(['primus'], function (Primus) {
   'use strict';
 
   var messagesProvider = function () {
@@ -16,29 +16,16 @@ define(['primus', 'game/events'], function (Primus, events) {
     this.$get = function ($rootScope) {
       var self = this,
           primus,
-          reconnect = function (gameId) {
-            if (primus) {
-              primus.end();
-            }
-            console.log('Reconnecting to WS with game id: ' + gameId);
-            primus = new Primus(getUrl(gameId));
-            primus.on('data', handleIncoming);
-          },
           handleIncoming = function (data) {
             if (!data || !data.action) {
               // Ignore.
               return;
             }
-            if (data.action === events.gameCreated) {
-              // Reconnect with game info
-              reconnect(data.id);
-            }
             console.log('Received message: ' + data.action);
             $rootScope.$broadcast(data.action, data);
           },
-          getUrl = function (gameId) {
-            self.gameId = (gameId = gameId || self.gameId);
-            return self.url + (gameId ? '?game=' + gameId : '');
+          getUrl = function () {
+            return self.url + '?game=' + self.gameId;
           };
       if (self.url === '') {
         self.url = '/';
@@ -60,7 +47,20 @@ define(['primus', 'game/events'], function (Primus, events) {
           }
         },
         connect: function (gameId) {
-          primus = new Primus(getUrl(gameId));
+          if (primus) {
+            if (gameId && gameId !== self.gameId) {
+              primus.end();
+            } else {
+              return;
+            }
+          }
+          if (gameId) {
+            self.gameId = gameId;
+          }
+          if (!self.gameId) {
+            return;
+          }
+          primus = new Primus(getUrl());
           primus.on('data', handleIncoming);
         },
         getGameId: function () {

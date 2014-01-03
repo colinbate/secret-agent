@@ -23,11 +23,10 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.submitName = function () {
       $scope.info.state = 2;
+      $scope.$root.$broadcast('player:add', $scope.info.name);
       if ($scope.isMaster()) {
-        $scope.$root.$broadcast('player:add', $scope.info.name);
-        $scope.sendMessage(events.masterJoin);
+        $scope.createNewGame();
       } else {
-        $scope.$root.$broadcast('player:add', $scope.info.name);
         $scope.sendMessage(events.join, {name: $scope.info.name});
       }
     };

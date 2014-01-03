@@ -4,16 +4,18 @@ define(['game/data', 'game/events'], function (data, events) {
   var gameController = function ($scope, messages, $sce) {
     $scope.info = {
       id: '',
-      state: 0,
+      state: 1,
       name: '',
       role: '',
       agent: null,
       agents: [],
     };
-
+    $scope.newGameAttempts = 0;
     $scope.game = {
       message: ''
     };
+
+    // CONVENIENCE FUNCTIONS --------------------------------
 
     $scope.getAgent = function (index) {
       if (!data.agents || data.agents.length <= index) {
@@ -29,14 +31,6 @@ define(['game/data', 'game/events'], function (data, events) {
         return;
       }
       return data.locations[index];
-    };
-
-    $scope.getDieClass = function (roll) {
-      if (roll < 1 || roll > 6) {
-        $scope.setError('Invalid roll of the die: ' + roll);
-        return;
-      }
-      return data.dice[roll - 1];
     };
 
     $scope.locationCount = function () {
@@ -76,9 +70,25 @@ define(['game/data', 'game/events'], function (data, events) {
 
     // MESSAGE HANDLERS -------------------------------------
 
-    $scope.handleGameCreated = function (msg) {
-      $scope.info.id = msg.id;
-      $scope.info.state = 1;
+    $scope.handleGameCreated = function () {
+      $scope.info.state = 2;
+      $scope.newGameAttempts = 0;
+    };
+
+    $scope.handleCannotCreate = function (msg) {
+      if ($scope.newGameAttempts >= 5) {
+        $scope.setError('Could not find a unique game...');
+        $scope.info.state = 0;
+        return;
+      }
+      if (msg.reason === 'already exists') {
+        $scope.newGameAttempts += 1;
+        $scope.info.id = '';
+        $scope.createNewGame();
+      } else {
+        $scope.setError('Could not create game: ' + msg.reason);
+        $scope.info.state = 0;
+      }
     };
 
     $scope.handleIdentify = function () {
@@ -109,10 +119,28 @@ define(['game/data', 'game/events'], function (data, events) {
     };
 
     events.onMessage(events.gameCreated, $scope, $scope.handleGameCreated);
+    events.onMessage(events.cannotCreate, $scope, $scope.handleCannotCreate);
     events.onMessage(events.identify, $scope, $scope.handleIdentify);
     events.onMessage(events.startGame, $scope, $scope.handleStartGame);
     events.onMessage(events.newTurn, $scope, $scope.handleNewTurn);
     events.onMessage(events.gameOver, $scope, $scope.handleGameOver);
+
+    // GAME FLOW LOGIC --------------------------------------
+
+    $scope.getRandomId = function (len) {
+      var buffer = '';
+      while (len) {
+        buffer += (0|Math.random()*36).toString(36);
+        len -= 1;
+      }
+      return buffer;
+    };
+
+    $scope.createNewGame = function (id) {
+      $scope.info.id = id || $scope.getRandomId(9);
+      messages.connect($scope.info.id);
+      messages.send(events.newGame, {id: $scope.info.id});
+    };
 
     // UI STATE MANAGEMENT ----------------------------------
 
@@ -129,6 +157,14 @@ define(['game/data', 'game/events'], function (data, events) {
       return classes;
     };
 
+    $scope.getDieClass = function (roll) {
+      if (roll < 1 || roll > 6) {
+        $scope.setError('Invalid roll of the die: ' + roll);
+        return;
+      }
+      return data.dice[roll - 1];
+    };
+
     // INITIALIZE GAME STATE --------------------------------
 
     $scope.initialize = function () {
@@ -140,8 +176,7 @@ define(['game/data', 'game/events'], function (data, events) {
         console.log('Joining game (' + gameId + ') in controller.');
       } else {
         $scope.info.role = 'master';
-        messages.send(events.newGame);
-        console.log('Setting up new game in controller.');
+        console.log('No joining game id, primed to create a new one.');
       }
     };
     $scope.initialize();

@@ -5,7 +5,6 @@ var Primus = require('primus'),
     Rooms = require('primus-rooms'),
     http = require('http'),
     nodestatic = require('node-static'),
-    uuid = require('uuid'),
     selfHost = process.argv.length > 2 && process.argv[2] === 'selfhost',
     file = selfHost ? new nodestatic.Server('./public', {cache: false, headers: {'Cache-Control': 'no-cache, must-revalidate'}}) : null,
     server = selfHost ? http.createServer(function (request, response) {
@@ -20,21 +19,21 @@ var Primus = require('primus'),
       return parseInt(Math.floor(Math.random() * (max - min + 1) + min), 10);
     },
     interceptors = {
+      newGame: function (msg, spark, game) {
+          if (!spark.isRoomEmpty(game)) {
+            spark.write({action:'cannotCreate', reason: 'already exists'});
+            return;
+          }
+          spark.join(game);
+          spark.join(game + '-master');
+          spark.write({action:'gameCreated', id: game});
+      },
       hello: function (msg, spark, game) {
         if (game) {
           msg.source = spark.id;
           primus.room(game + '-master').write(msg);
           //console.log('Said hello to room: ' + game + '-master');
         }
-      },
-      masterJoin: function (msg, spark, game) {
-        if (!spark.isRoomEmpty(game)) {
-          spark.write({action:'cannotJoin', reason: 'already exists'});
-          return;
-        }
-        
-        spark.join(game);
-        spark.join(game + '-master');
       },
       identify: function (msg, spark, game) {
         var socket;
@@ -76,10 +75,9 @@ var Primus = require('primus'),
             payload = {action:'startGame', playOrder: players, opts: msg.opts, agents: agents, you: agent};
             socket = primus.connections[list[idx]];
             if (socket) {
-              //console.log(require('util').inspect(socket));
               socket.write.call(socket, 'ignore');
-              console.log('Sending to ' + socket.id + ':');
-              console.log(require('util').inspect(payload));
+              //console.log('Sending to ' + socket.id + ':');
+              //console.log(require('util').inspect(payload));
               socket.write.call(socket, payload);
             } else {
               console.error('No socket for ' + list[idx]);
@@ -93,18 +91,6 @@ var Primus = require('primus'),
         spark.write(payload);
         spark.room(game).write(payload);
       }
-    },
-    createGame = function (spark) {
-      spark.on('data', function (message) {
-        var gameId;
-        if (message && message.action === 'newGame') {
-          gameId = uuid.v4();
-          while (!spark.isRoomEmpty(gameId)) {
-            gameId = uuid.v4();
-          }
-          spark.write({action:'gameCreated', id: gameId});
-        }
-      });
     };
 
 primus.use('rooms', Rooms);
@@ -112,9 +98,11 @@ primus.use('rooms', Rooms);
 primus.on('connection', function (spark) {
   var game = spark.query && spark.query.game;
   if (!game) {
-    // Pre game connection
-    console.log('Pre-game connection made');
-    createGame(spark);
+    // Invalid connection
+    console.warn('Someone connecting without a game.');
+    process.nextTick(function () {
+      spark.end();
+    });
     return;
   }
   console.log(spark.id + ' connected to ' + game);
@@ -144,7 +132,7 @@ primus.on('connection', function (spark) {
 
 primus.on('disconnection', function (spark) {
   var game = spark.query && spark.query.game;
-  if (game !== undefined) {
+  if (game) {
     spark.room(game).write({action:'left', id: spark.id});
   }
 });
