@@ -47,22 +47,52 @@
       </div>
     </div>
     <div class="info-collection" ng-controller="InfoController" ng-class="stateClass()">
-      <div class="name-entry" ng-class="{'cannot-join': cannotJoin}">
-        <input type="text" placeholder="Enter your name" ng-model="info.name">
-        <button ng-click="submitName()">Play</button>
+      <div class="cutout">Secret Agent</div>
+      <div class="intro-instructions">
+        <p>Do you have what it takes to get in and out without being discovered?</p>
+        <p>Help your secret agent discover information that will help uncover the location of a new weapons installation. Be careful as other agents are also in the area and tensions are high.</p>
+        <p>Enjoy yourself in this remake of the classic 1984 board game Heimlich &amp; Co.</p>
       </div>
-      <div class="initial-join-message">Checking on your game...</div>
-      <div class="info-error-message" ng-class="{'cannot-join': cannotJoin}">Unfortunately the game you are trying to join is already in progress. Why not <a href="/">create a new one?</a></div>
-      <div class="game-url"><a href="/#{{info.id}}" ng-bind="fullUrl()"></a></div>
-      <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
-      <div class="waiting-start">Waiting for game owner to start game...</div>
-      <div class="advanced-options">
-        <a href="#" ng-click="openOptions=!openOptions">Change game play options?</a>
-        <div class="opts" ng-class="{'shown': openOptions}">
-          <label>Number of extra agents <input type="number" size="3" min="1" max="5" ng-model="opts.extraAgents"></label>
-          <label><input type="checkbox" ng-model="randomSafe"> Random safe starting location?</label>
+      <div class="game-controls">
+        <div class="name-entry">
+          <p class="not-joiner">Want to play a game? Just enter your name and you will be given a link to share with anyone you would like to play with.</p>
+          <p class="joiner">You've been invited to play a game of Secret Agent. To join just give your name below.</p>
+          <input type="text" placeholder="Enter your name" ng-model="info.name">
+          <button ng-click="submitName()">Play</button>
+        </div>
+        <div class="initial-join-message">Connecting to your game...</div>
+        <div class="info-error-message">Unfortunately the game you are trying to join is already in progress or completed. Why not <a href="/">create a new one?</a></div>
+        <div class="game-url">
+          <p>This is a multiplayer game that supports 2-7 players, you can invite others to play with you by sending them this link:</p>
+          <a target="_blank" href="/#{{info.id}}" ng-bind="fullUrl()"></a>
+        </div>
+        <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
+        <div class="waiting-start">
+          <p><em>Waiting for game owner to start game...</em></p>
+          <p>While you are waiting, a quick overview of the game:</p>
+          <ul>
+            <li>Each player is assigned a colored agent card</li>
+            <li>On your turn you can move any of the colored agent markers on the inside of the board (as per your die role)</li>
+            <li>Whenever any agent reaches the location with the safe in it, secrets are gathered by all agents
+              <ul>
+                <li>Numbered houses give that many secrets</li>
+                <li>The church contains no secrets</li>
+                <li>The ruin (bottom left) takes away three secrets</li>
+              </ul>
+            </li>
+            <li>These secrets correspond to the markers along the outside of the board</li>
+          </ul>
+          <p>Can you get your marker around the outside first without alerting others to your secret identity?</p>
+        </div>
+        <div class="advanced-options">
+          <a href="" ng-click="openOptions=!openOptions">Change game play options?</a>
+          <div class="opts" ng-class="{'shown': openOptions}">
+            <label>Number of extra agents <input type="number" size="3" min="1" max="5" ng-model="opts.extraAgents"></label>
+            <label><input type="checkbox" ng-model="randomSafe"> Random safe starting location?</label>
+          </div>
         </div>
       </div>
+      
     </div>
     <div class="overlay"></div>
     <script data-main="/js/main.js" src="/lib/require.js"></script>

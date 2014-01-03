@@ -1,15 +1,15 @@
 .info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .player-agent,
-.board-locations, .board-track, .advanced-options, .overlay, .waiting-start, .info-error-message,
+.board-locations, .board-track, .advanced-options, .waiting-start, .info-error-message,
 .initial-join-message {
 	display: none;
 }
 
-body.initial {
+body.error {
 	
 }
 
 body.provide-name {
-	.overlay, .info-collection, .name-entry {
+	.info-collection, .name-entry {
 		display: block;
 	}
 	.info-collection {
@@ -35,7 +35,7 @@ body.provide-name.player-role {
 }
 
 body.awaiting-players {
-	.overlay, .info-collection, .waiting-start {
+	.info-collection, .waiting-start {
 		display: block;
 	}
 }
@@ -53,6 +53,9 @@ body.playing {
 	.my-agent, .die, .game-board, .board-locations, .board-track {
 		display: block;
 	}
+	.overlay {
+		display: none;
+	}
 }
 
 body.game-over {
@@ -61,6 +64,21 @@ body.game-over {
 	}
 	.my-agent, .game-board, .board-locations, .board-track {
 		display: block;
+	}
+	.overlay {
+		display: none;
+	}
+}
+
+body.player-role {
+	.not-joiner {
+		display: none;
+	}
+}
+
+body.master-role {
+	.joiner {
+		display: none;
 	}
 }
 

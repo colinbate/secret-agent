@@ -162,6 +162,9 @@ define(['game/events'], function (events) {
 
     $scope.handleLeft = function (msg) {
       var departed = $scope.removePlayerById(msg.id);
+      if (!departed) {
+        return; // prevent unnecessary game endings.
+      }
       if ($scope.players.list.length === 1) {
         // Only one left :(
         $scope.setHelp('Game over. Everyone else left.');
