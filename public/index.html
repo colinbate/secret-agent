@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/secret.css" type="text/css">
     <link rel="shortcut icon" href="/favicon.ico">
   </head>
-  <body ng-controller="GameController" ng-class="gameState()">
+  <body ng-controller="GameController" ng-class="gameState()" ng-keydown="sniffKeys($event)">
     <div class="content">
       <div class="game-window">
         <div class="game-board" ng-controller="BoardController" ng-class="boardState()">
@@ -32,6 +32,7 @@
         <header role="banner">
           <h1>Secret Agent</h1>
           <nav role="navigation">
+            <a href="" ng-click="chat()">Chat</a>
           </nav>
         </header>
         <div class="player-info" ng-controller="PlayerController">
@@ -43,11 +44,29 @@
           </ul>
         </div>
       </div>
-      <div class="chat-window" ng-controller="ChatController">
+      <div class="chat-window" ng-controller="ChatController" ng-class="chatState()">
+        <div class="buffer">
+          <div class="chat-message" ng-repeat="m in messages">
+            <span class="name">{{m.name}}</span>
+            <span class="msg">{{m.msg}}</span>
+          </div>
+        </div>
+        <div class="input-area">
+          <input type="text" ng-model="inputMessage" ng-keypress="submitCheck($event)"></textarea>
+        </div>
       </div>
     </div>
     <div class="info-collection" ng-controller="InfoController" ng-class="stateClass()">
-      <div class="cutout">Secret Agent</div>
+      <div class="cutout">
+        <span class="title">Secret Agent</span>
+        <span class="agent mr-red"></span>
+        <span class="agent mr-orange"></span>
+        <span class="agent mr-yellow"></span>
+        <span class="agent mr-green"></span>
+        <span class="agent mr-blue"></span>
+        <span class="agent mr-gray"></span>
+        <span class="agent mr-purple"></span>
+      </div>
       <div class="intro-instructions">
         <p>Do you have what it takes to get in and out without being discovered?</p>
         <p>Help your secret agent discover information that will help uncover the location of a new weapons installation. Be careful as other agents are also in the area and tensions are high.</p>
@@ -59,14 +78,26 @@
           <p class="joiner">You've been invited to play a game of Secret Agent. To join just give your name below.</p>
           <input type="text" placeholder="Enter your name" ng-model="info.name">
           <button ng-click="submitName()">Play</button>
+          <p class="not-joiner">If you were looking to join someone else's game, they should have sent you a URL with a code at the end of it.</p>
+          <p class="not-joiner">In the future we are planning to be able to match up random people with each other.</p>
         </div>
-        <div class="initial-join-message">Connecting to your game...</div>
+        <div class="initial-join-message"><p>Connecting to your game...</p></div>
         <div class="info-error-message">Unfortunately the game you are trying to join is already in progress or completed. Why not <a href="/">create a new one?</a></div>
         <div class="game-url">
           <p>This is a multiplayer game that supports 2-7 players, you can invite others to play with you by sending them this link:</p>
           <a target="_blank" href="/#{{info.id}}" ng-bind="fullUrl()"></a>
         </div>
-        <div class="get-started"><button ng-click="startPlaying()">Start Game</button></div>
+        <div class="current-joined">
+          <h3>Current Players</h3>
+          <ul class="joiner-list">
+            <li ng-repeat="j in joiners">{{j.name}}</li>
+          </ul>
+        </div>
+        <div class="get-started">
+          <button ng-click="startPlaying()" ng-hide="joiners.length<2">Start Game</button>
+          <p ng-show="joiners.length<2">Waiting for at least one other player...</p>
+          <p ng-show="joiners.length===7">You have a full seven players... time to start!</p>
+        </div>
         <div class="waiting-start">
           <p><em>Waiting for game owner to start game...</em></p>
           <p>While you are waiting, a quick overview of the game:</p>
