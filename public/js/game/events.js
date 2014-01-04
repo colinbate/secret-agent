@@ -22,6 +22,7 @@ define([], function () {
     newTurn: 'newTurn',
     gameOver: 'gameOver',
     revealSelf: 'revealSelf',
+    chat: 'chat',
     onMessage: function (evt, $scope, fn) {
       $scope.$on(evt, function (e, msg) {
         $scope.$apply(function () {

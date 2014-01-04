@@ -36,12 +36,24 @@ header {
 	color: @color-base-page;
 	background-color: @color-content-dark;
 	margin: 0;
+	position: relative;
 
 	h1 {
 		margin: 0 0 0 1024px;
 		font-size: 18px;
 		padding: 10px;
 		height: 41px;
+	}
+}
+
+nav {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	font-size: 18px;
+
+	a {
+		color: white;
 	}
 }
 
@@ -81,6 +93,11 @@ header {
 		left: 1em;
 		font-size: 60px;
 		font-family: @font-header;
+		width: 980px;
+
+		.title {
+			margin-right: 0.4em;
+		}
 	}
 
 	.intro-instructions {
@@ -118,6 +135,10 @@ header {
 		padding: 0.4em;
 		background-color: green;
 		color: white;
+	}
+
+	.name-entry {
+		margin-bottom: 1em;
 	}
 
 	.waiting-start {

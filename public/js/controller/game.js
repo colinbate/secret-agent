@@ -158,6 +158,18 @@ define(['game/data', 'game/events'], function (data, events) {
       return classes;
     };
 
+    $scope.chat = function () {
+      $scope.$root.$broadcast('chat:open');
+    };
+
+    $scope.sniffKeys = function (ev) {
+      if (ev && ev.keyCode) {
+        if (ev.keyCode === 27) {
+          $scope.$root.$broadcast('chat:close');
+        }
+      }
+    };
+
     $scope.getDieClass = function (roll) {
       if (roll < 1 || roll > 6) {
         $scope.setError('Invalid roll of the die: ' + roll);

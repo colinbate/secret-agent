@@ -14,6 +14,7 @@ define(['game/events', 'game/data'], function (events, data) {
     };
     $scope.randomSafe = false;
     $scope.preState = 0;
+    $scope.joiners = [];
 
     // UI ACTIONS -------------------------------------------
 
@@ -44,10 +45,27 @@ define(['game/events', 'game/data'], function (events, data) {
       return classes;
     };
 
+    $scope.addJoiner = function (name) {
+      if ($scope.joiners.length < 7 && $scope.info.state <= 2) {
+        $scope.joiners.push({name: name});
+      }
+    };
+
+    // EVENT HANDLERS ---------------------------------------
+
+    $scope.$on('player:add', function (e, name) {
+      $scope.addJoiner(name);
+    });
+
     // MESSAGE HANDLERS -------------------------------------
 
-    $scope.handleIdentify = function () {
+    $scope.handleIdentify = function (msg) {
+      $scope.joiners = msg.names;
       $scope.preState = state.PROMPT;
+    };
+
+    $scope.handleJoin = function (msg) {
+      $scope.addJoiner(msg.name);
     };
 
     $scope.handleCannotJoin = function () {
@@ -55,6 +73,7 @@ define(['game/events', 'game/data'], function (events, data) {
     };
 
     events.onMessage(events.identify, $scope, $scope.handleIdentify);
+    events.onMessage(events.join, $scope, $scope.handleJoin);
     events.onMessage(events.cannotJoin, $scope, $scope.handleCannotJoin);
 
   };

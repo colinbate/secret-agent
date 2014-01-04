@@ -1,6 +1,6 @@
 .info-collection, .name-entry, .game-url, .my-agent, .die, .get-started, .player-agent,
 .board-locations, .board-track, .advanced-options, .waiting-start, .info-error-message,
-.initial-join-message {
+.initial-join-message, .current-joined {
 	display: none;
 }
 
@@ -32,6 +32,9 @@ body.provide-name.player-role {
 	.init .initial-join-message {
 		display: block;
 	}
+	.prompt .current-joined {
+		display: block;
+	}
 }
 
 body.awaiting-players {
@@ -41,7 +44,7 @@ body.awaiting-players {
 }
 
 body.awaiting-players.master-role {
-	.get-started, .game-url, .advanced-options {
+	.get-started, .game-url, .advanced-options, .current-joined {
 		display: block;
 	}
 	.waiting-start {
