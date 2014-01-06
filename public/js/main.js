@@ -5,10 +5,12 @@
         paths: {
             'lib'             : '../lib',
             'angular'         : '../lib/angular.min',
-            'primus'          : '../primus/primus'
+            'primus'          : '../primus/primus',
+            'dragster'        : '../lib/dragster'
         },
         shim: {
-            'angular'         : { exports: 'angular' }
+            'angular'         : { exports: 'angular' },
+            'dragster'        : { exports: 'Dragster' }
         }
     });
 

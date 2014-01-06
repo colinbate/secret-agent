@@ -27,6 +27,11 @@ define(['game/events', 'game/data'], function (events, data) {
       state: state.WAIT
     };
 
+    $scope.moves = {
+      available: null,
+      starting: null
+    };
+
     // INTERNAL STATE MANAGEMENT ----------------------------
 
     $scope.addAgentToLocation = function (agent, loc) {
@@ -189,6 +194,7 @@ define(['game/events', 'game/data'], function (events, data) {
     $scope.handleRolledDie = function (msg) {
       if ($scope.isMe(msg.name)) {
         $scope.board.state = state.MOVE_AGENTS;
+        $scope.moves.available = msg.value;
       }
     };
 
@@ -234,22 +240,34 @@ define(['game/events', 'game/data'], function (events, data) {
 
     $scope.moveAgent = function (agent, steps) {
       var delta = [agent, steps];
-      if ($scope.board.state === state.MOVE_AGENTS) {
+      if ($scope.board.state === state.MOVE_AGENTS && steps <= $scope.moves.available) {
         $scope.moveAgentDelta(delta);
+        $scope.moves.available -= steps;
         $scope.sendMessage(events.moveAgent, {name: $scope.info.name, delta: delta, agents: $scope.board.agents});
         $scope.$root.$broadcast('turn:move', {name: $scope.info.name, delta: delta});
       }
     };
 
+    $scope.setupDragDrop = function (el) {
+      var agentId;
+      if ($scope.moves.available > 0 && $scope.board.state === state.MOVE_AGENTS) {
+        agentId = parseInt(el[0].id.split(/-/)[1], 10);
+        $scope.moves.starting = $scope.whereIsAgent(agentId);
+      }
+    };
+
+    $scope.stopDragDrop = function () {
+      $scope.moves.starting = null;
+    };
+
     $scope.dragDrop = function (dragged, dropped) {
-      var agentId = parseInt(dragged.id.split(/-/)[1], 10),
-          locationId = parseInt(dropped.id.split(/-/)[1], 10),
-          agent = $scope.getAgent(agentId),
-          location = $scope.getLocation(locationId),
-          currentId = $scope.whereIsAgent(agentId),
-          current = $scope.getLocation(currentId),
-          distance = $scope.distanceBetween(currentId, locationId);
-      console.log('Dragged agent ' + agent.name + ' from ' + current.name + ' to ' + location.name + ', a distance of ' + distance);
+      var locationId = parseInt(dropped.id.split(/-/)[1], 10),
+          agentId = parseInt(dragged.id.split(/-/)[1], 10),
+          distance;
+      if ($scope.moves.starting !== null) {
+        distance = $scope.distanceBetween($scope.moves.starting, locationId);
+        $scope.moveAgent(agentId, distance);
+      }
     };
 
     $scope.moveFileTo = function (loc) {
@@ -273,6 +291,15 @@ define(['game/events', 'game/data'], function (events, data) {
     $scope.locState = function (index) {
       var classes = [];
       classes.push('location-' + index);
+      if ($scope.moves.starting !== null && $scope.moves.available > 0) {
+        if ($scope.moves.starting === index) {
+          // No class
+        } else if ($scope.distanceBetween($scope.moves.starting, index) <= $scope.moves.available) {
+          classes.push('possible-move');
+        } else {
+          classes.push('forbidden-move');
+        }
+      }
       if (index === $scope.board.file) {
         classes.push('has-file');
       }
@@ -319,6 +346,9 @@ define(['game/events', 'game/data'], function (events, data) {
     $scope.$on('game:over', function () {
       $scope.handleGameOver();
     });
+
+    events.onMessage('cb:drag:start', $scope, $scope.setupDragDrop);
+    events.onMessage('cb:drag:end', $scope, $scope.stopDragDrop);
 
   };
   boardController.$inject = ['$scope'];

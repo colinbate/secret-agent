@@ -1,4 +1,4 @@
-define(['angular', 'service/id'], function (angular) {
+define(['angular', 'dragster', 'service/id'], function (angular, Dragster) {
   'use strict';
 
   var module = angular.module('cb.directives.dragdrop', ['cb.services.id']),
@@ -9,6 +9,9 @@ define(['angular', 'service/id'], function (angular) {
           angular.element(elem).attr('id', id);
         }
         return id;
+      },
+      dragsterIt = function (elem) {
+        return new Dragster(elem[0]);
       };
 
   module.directive('cbDraggable', ['$rootScope', 'id', function($rootScope, uuid) {
@@ -20,11 +23,11 @@ define(['angular', 'service/id'], function (angular) {
         el.bind('dragstart', function(e) {
           var id = ensureId(el, uuid);
           e.dataTransfer.setData('text', id);
-          $rootScope.$emit('cb:drag:start');
+          $rootScope.$broadcast('cb:drag:start', el);
         });
         
         el.bind('dragend', function() {
-          $rootScope.$emit('cb:drag:end');
+          $rootScope.$broadcast('cb:drag:end', el);
         });
       }
     };
@@ -37,7 +40,7 @@ define(['angular', 'service/id'], function (angular) {
           onDrop: '&'
       },
       link: function(scope, el) {
-                   
+        dragsterIt(el);
         el.bind('dragover', function(e) {
           if (e.preventDefault) {
             e.preventDefault(); // Necessary. Allows us to drop.
@@ -47,12 +50,12 @@ define(['angular', 'service/id'], function (angular) {
           return false;
         });
         
-        el.bind('dragenter', function(e) {
+        el.bind('dragster:enter', function(e) {
           // this / e.target is the current hover target.
           angular.element(e.target).addClass('cb-dnd-over');
         });
         
-        el.bind('dragleave', function(e) {
+        el.bind('dragster:leave', function(e) {
           angular.element(e.target).removeClass('cb-dnd-over');  // this / e.target is previous target element.
         });
         

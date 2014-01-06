@@ -108,7 +108,7 @@ define(['game/data', 'game/events'], function (data, events) {
     $scope.handleNewTurn = function (msg) {
       if ($scope.isMe(msg.name)) {
         $scope.sendMessage(events.rollDie, {name: msg.name});
-        $scope.setHelp('Your turn! Click the agents to move them');
+        $scope.setHelp('Your turn! Click or drag the agents to move them');
       } else {
         $scope.setHelp('Waiting for ' + msg.name + '...');
       }
