@@ -12,9 +12,9 @@
           <div class="board-wrapper">
             <img src="/img/game-board-1024-wide.jpeg">
             <ul class="board-locations">
-              <li ng-repeat="loc in board.locations" ng-click="moveFileTo($index)" ng-class="locState($index)">
+              <li ng-repeat="loc in board.locations" id="boardloc-{{$index}}" ng-click="moveFileTo($index)" ng-class="locState($index)" cb-drop-target="true" on-drop="dragDrop(dragEl, dropEl)">
                 <div class="markers">
-                  <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card" ng-click="moveAgent(agt.id, 1)"></div>
+                  <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card" id="agentmarker-{{agt.id}}" ng-click="moveAgent(agt.id, 1)" cb-draggable="true"></div>
                 </div>
               </li>
             </ul>

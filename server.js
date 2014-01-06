@@ -136,6 +136,7 @@ primus.on('disconnection', function (spark) {
   var game = spark.query && spark.query.game;
   if (game) {
     spark.room(game).write({action:'left', id: spark.id});
+    spark.leave(game);
   }
 });
 

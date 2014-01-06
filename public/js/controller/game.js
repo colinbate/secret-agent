@@ -1,7 +1,7 @@
 define(['game/data', 'game/events'], function (data, events) {
   'use strict';
 
-  var gameController = function ($scope, messages, $sce) {
+  var gameController = function ($scope, messages, $sce, idSvc) {
     $scope.info = {
       id: '',
       state: 1,
@@ -128,17 +128,8 @@ define(['game/data', 'game/events'], function (data, events) {
 
     // GAME FLOW LOGIC --------------------------------------
 
-    $scope.getRandomId = function (len) {
-      var buffer = '';
-      while (len) {
-        buffer += (0|Math.random()*36).toString(36);
-        len -= 1;
-      }
-      return buffer;
-    };
-
     $scope.createNewGame = function (id) {
-      $scope.info.id = id || $scope.getRandomId(9);
+      $scope.info.id = id || idSvc.random(9);
       messages.connect($scope.info.id);
       messages.send(events.newGame, {id: $scope.info.id});
     };
@@ -195,7 +186,7 @@ define(['game/data', 'game/events'], function (data, events) {
     $scope.initialize();
 
   };
-  gameController.$inject = ['$scope', 'messages', '$sce'];
+  gameController.$inject = ['$scope', 'messages', '$sce', 'id'];
   gameController.ctrlName = 'GameController';
 
   return gameController;
