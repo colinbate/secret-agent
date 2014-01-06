@@ -150,6 +150,22 @@ define(['game/events', 'game/data'], function (events, data) {
       return won;
     };
 
+    $scope.whereIsAgent = function (agentId) {
+      var ii;
+      for (ii = 0; ii < $scope.board.agents.length; ii += 1) {
+        if ($scope.board.agents[ii][0] === agentId) {
+          return $scope.board.agents[ii][1];
+        }
+      }
+    };
+
+    $scope.distanceBetween = function (locA, locB) {
+      if (locB < locA) {
+        locB += $scope.board.locations.length;
+      }
+      return locB - locA;
+    };
+
     // MESSAGE HANDLERS -------------------------------------
 
     $scope.handleStartGame = function (msg) {
@@ -223,6 +239,17 @@ define(['game/events', 'game/data'], function (events, data) {
         $scope.sendMessage(events.moveAgent, {name: $scope.info.name, delta: delta, agents: $scope.board.agents});
         $scope.$root.$broadcast('turn:move', {name: $scope.info.name, delta: delta});
       }
+    };
+
+    $scope.dragDrop = function (dragged, dropped) {
+      var agentId = parseInt(dragged.id.split(/-/)[1], 10),
+          locationId = parseInt(dropped.id.split(/-/)[1], 10),
+          agent = $scope.getAgent(agentId),
+          location = $scope.getLocation(locationId),
+          currentId = $scope.whereIsAgent(agentId),
+          current = $scope.getLocation(currentId),
+          distance = $scope.distanceBetween(currentId, locationId);
+      console.log('Dragged agent ' + agent.name + ' from ' + current.name + ' to ' + location.name + ', a distance of ' + distance);
     };
 
     $scope.moveFileTo = function (loc) {

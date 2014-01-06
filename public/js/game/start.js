@@ -2,7 +2,9 @@ define(
     [
         'angular',
         'controller/loader',
-        'game/messages'
+        'game/messages',
+        'service/id',
+        'directive/drag-drop'
     ],
     function (angular, ctrlLoader, messages) {
     'use strict';
@@ -23,7 +25,7 @@ define(
         bootstrap: function () {
             var app, gameId = joinGameId();
             log('He\'s a secret agent man...');
-            app = angular.module(appName, []);
+            app = angular.module(appName, ['cb.services.id', 'cb.directives.dragdrop']);
             app.provider('messages', messages);
             app.config(['messagesProvider', function (messagesProvider) {
               messagesProvider.setGameId(gameId);
