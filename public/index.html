@@ -16,6 +16,7 @@
                 <div class="markers">
                   <div class="agent" ng-repeat="agt in loc.agents" ng-class="agt.card" id="agentmarker-{{agt.id}}" ng-click="moveAgent(agt.id, 1)" cb-draggable="true"></div>
                 </div>
+                <div class="target"></div>
               </li>
             </ul>
             <ul class="board-track">
@@ -82,7 +83,7 @@
           <p class="not-joiner">In the future we are planning to be able to match up random people with each other.</p>
         </div>
         <div class="initial-join-message"><p>Connecting to your game...</p></div>
-        <div class="info-error-message">Unfortunately the game you are trying to join is already in progress or completed. Why not <a href="/">create a new one?</a></div>
+        <div class="info-error-message"><p>Unfortunately the game you are trying to join is already in progress or completed. Why not <a href="/">create a new one?</a></p></div>
         <div class="game-url">
           <p>This is a multiplayer game that supports 2-7 players, you can invite others to play with you by sending them this link:</p>
           <a target="_blank" href="/#{{info.id}}" ng-bind="fullUrl()"></a>
