@@ -68,12 +68,21 @@ module.exports = function(grunt) {
       }
     },
     requirejs: {
-      compile: {
+      main: {
         options: {
           baseUrl: 'public/js',
           mainConfigFile: 'public/js/main.js',
+          paths: {'primus': 'empty:'},
           out: 'dist/js/main.js',
-          name: 'main'
+          name: 'main',
+          exclude: ['primus']
+        }
+      },
+      primus: {
+        options: {
+          baseUrl: 'public/lib',
+          out: 'dist/lib/primus.js',
+          name: 'primus'
         }
       }
     },
@@ -92,6 +101,9 @@ module.exports = function(grunt) {
         files: {
           'dist/index.html': ['public/index.html']
         }
+      },
+      imgs: {
+        files: [{ expand: true, cwd: 'public/img/', src: ['**'], dest: 'dist/img/' }]
       },
       libs: {
         files: {
@@ -115,6 +127,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-execute');
 
   grunt.registerTask('default', ['less:clean', 'jshint']);
-  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'execute:genlib', 'requirejs:compile']);
+  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'execute:genlib', 'requirejs']);
 
 };
