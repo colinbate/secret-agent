@@ -6,6 +6,7 @@ var Primus = require('primus'),
     http = require('http'),
     nodestatic = require('node-static'),
     selfHost = process.argv.length > 2 && process.argv[2] === 'selfhost',
+    genlib = process.argv.length > 2 && process.argv[2] === 'genlib',
     file = selfHost ? new nodestatic.Server('./public', {cache: false, headers: {'Cache-Control': 'no-cache, must-revalidate'}}) : null,
     server = selfHost ? http.createServer(function (request, response) {
       request.addListener('end', function () {
@@ -96,6 +97,12 @@ var Primus = require('primus'),
     };
 
 primus.use('rooms', Rooms);
+primus.save(__dirname + '/public/lib/primus.js');
+
+if (genlib) {
+  // Quit now
+  process.exit(0);
+}
 
 primus.on('connection', function (spark) {
   var game = spark.query && spark.query.game;
