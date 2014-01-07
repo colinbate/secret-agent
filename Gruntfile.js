@@ -111,9 +111,9 @@ module.exports = function(grunt) {
         }
       }
     },
-    execute: {
+    shell: {
       genlib: {
-        src: ['server.js genlib']
+        command: 'node server.js genlib'
       }
     }
   });
@@ -124,9 +124,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-csso');
-  grunt.loadNpmTasks('grunt-execute');
+  grunt.loadNpmTasks('grunt-shell');
 
   grunt.registerTask('default', ['less:clean', 'jshint']);
-  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'execute:genlib', 'requirejs']);
+  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'shell:genlib', 'requirejs']);
 
 };
