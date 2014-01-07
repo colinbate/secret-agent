@@ -89,11 +89,13 @@ module.exports = function(grunt) {
     },
     copy: {
       html: {
-        options: {
-          report: 'gzip'
-        },
         files: {
           'dist/index.html': ['public/index.html']
+        }
+      },
+      libs: {
+        files: {
+          'dist/lib/require.js': ['public/lib/require.js']
         }
       }
     },
@@ -113,6 +115,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-execute');
 
   grunt.registerTask('default', ['less:clean', 'jshint']);
-  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy:html', 'execute:genlib', 'requirejs:compile']);
+  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'execute:genlib', 'requirejs:compile']);
 
 };
