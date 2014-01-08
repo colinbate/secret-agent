@@ -5,3 +5,4 @@ node_modules
 public/lib/angular.js
 public/lib/primus.js
 dist
+*.patch
