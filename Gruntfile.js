@@ -57,6 +57,14 @@ module.exports = function(grunt) {
         }
       }
     },
+    autoprefixer: {
+      secret: {
+        options: {
+          diff: true
+        },
+        src: 'public/css/secret.css'
+      }
+    },
     watch: {
       less: {
         files: ['less/**/*.less'],
@@ -123,10 +131,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-csso');
   grunt.loadNpmTasks('grunt-shell');
 
-  grunt.registerTask('default', ['less:clean', 'jshint']);
-  grunt.registerTask('opt', ['jshint', 'less:clean', 'csso:compress', 'copy', 'shell:genlib', 'requirejs']);
+  grunt.registerTask('css', ['less:clean', 'autoprefixer']);
+  grunt.registerTask('opt', ['jshint', 'less:clean', 'autoprefixer', 'csso:compress', 'copy', 'shell:genlib', 'requirejs']);
+  grunt.registerTask('default', ['css', 'jshint']);
 
 };
