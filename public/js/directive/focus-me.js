@@ -3,7 +3,7 @@ define(['angular'], function (angular) {
 
   var module = angular.module('cb.directives.focusme', []);
 
-  module.directive('cbFocusMe', function($timeout) {
+  module.directive('cbFocusMe', ['$timeout', function($timeout) {
     return {
       link: function(scope, element, attrs) {
         scope.$watch(attrs.cbFocusMe, function(value) {
@@ -17,5 +17,5 @@ define(['angular'], function (angular) {
         });
       }
     };
-  });
+  }]);
 });
