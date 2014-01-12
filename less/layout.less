@@ -54,6 +54,25 @@ nav {
 
 	a {
 		color: white;
+
+		&.new-messages {
+			animation: pulse 4s infinite ease-in-out;
+		}
+	}
+}
+
+@keyframes pulse {
+	0% {
+		text-shadow: 0 0 14px rgba(255,255,255,0.2);
+		color: #fff;
+	}
+	50% {
+		text-shadow: 0 0 14px rgba(233,104,35,0.9);
+		color: rgb(233,104,35);
+	}
+	100% {
+		text-shadow: 0 0 14px rgba(255,255,255,0.2);
+		color: #fff;
 	}
 }
 

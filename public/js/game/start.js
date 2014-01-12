@@ -4,7 +4,8 @@ define(
         'controller/loader',
         'game/messages',
         'service/id',
-        'directive/drag-drop'
+        'directive/drag-drop',
+        'directive/focus-me'
     ],
     function (angular, ctrlLoader, messages) {
     'use strict';
@@ -25,7 +26,8 @@ define(
         bootstrap: function () {
             var app, gameId = joinGameId();
             log('He\'s a secret agent man...');
-            app = angular.module(appName, ['cb.services.id', 'cb.directives.dragdrop']);
+            app = angular.module(appName,
+                ['cb.services.id', 'cb.directives.dragdrop', 'cb.directives.focusme']);
             app.provider('messages', messages);
             app.config(['messagesProvider', function (messagesProvider) {
               messagesProvider.setGameId(gameId);

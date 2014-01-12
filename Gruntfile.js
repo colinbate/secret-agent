@@ -68,7 +68,7 @@ module.exports = function(grunt) {
     watch: {
       less: {
         files: ['less/**/*.less'],
-        tasks: 'less:dev'
+        tasks: 'cssdev'
       },
       js: {
         files: ['*.js', 'public/js/**/*.js'],
@@ -135,6 +135,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-csso');
   grunt.loadNpmTasks('grunt-shell');
 
+  grunt.registerTask('cssdev', ['less:dev', 'autoprefixer']);
   grunt.registerTask('css', ['less:clean', 'autoprefixer']);
   grunt.registerTask('opt', ['jshint', 'less:clean', 'autoprefixer', 'csso:compress', 'copy', 'shell:genlib', 'requirejs']);
   grunt.registerTask('default', ['css', 'jshint']);
