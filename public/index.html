@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/secret.css" type="text/css">
     <link rel="shortcut icon" href="/favicon.ico">
   </head>
-  <body ng-controller="GameController" ng-class="gameState()" ng-keydown="sniffKeys($event)">
+  <body ng-controller="GameController" ng-class="gameState()" ng-keydown="sniffKeys($event)" ng-keypress="keyPressy($event)">
     <div class="content">
       <div class="game-window">
         <div class="game-board" ng-controller="BoardController" ng-class="boardState()">
@@ -33,7 +33,7 @@
         <header role="banner">
           <h1>Secret Agent</h1>
           <nav role="navigation">
-            <a href="" ng-click="chat()">Chat</a>
+            <a href="" ng-click="chat()" ng-class="{'new-messages': game.newChatMessages}">Chat</a>
           </nav>
         </header>
         <div class="player-info" ng-controller="PlayerController">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="input-area">
-          <input type="text" ng-model="inputMessage" ng-keypress="submitCheck($event)"></textarea>
+          <input type="text" ng-model="inputMessage" cb-focus-me="startChat" ng-keypress="submitCheck($event)"></textarea>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@
         <div class="name-entry">
           <p class="not-joiner">Want to play a game? Just enter your name and you will be given a link to share with anyone you would like to play with.</p>
           <p class="joiner">You've been invited to play a game of Secret Agent. To join just give your name below.</p>
-          <input type="text" placeholder="Enter your name" ng-model="info.name">
+          <input type="text" placeholder="Enter your name" ng-model="info.name" cb-focus-me="beginFocus" ng-keypress="checkKeys($event)">
           <button ng-click="submitName()">Play</button>
           <p class="not-joiner">If you were looking to join someone else's game, they should have sent you a URL with a code at the end of it.</p>
           <p class="not-joiner">In the future we are planning to be able to match up random people with each other.</p>

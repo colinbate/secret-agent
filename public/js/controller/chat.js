@@ -44,6 +44,8 @@ define(['game/events'], function (events) {
 
     $scope.openChat = function () {
       $scope.state = state.OPEN;
+      $scope.startChat = true;
+      $scope.game.newChatMessages = false;
     };
 
     $scope.closeChat = function () {
@@ -64,6 +66,9 @@ define(['game/events'], function (events) {
 
     $scope.handleChat = function (msg) {
       $scope.addMessage(msg);
+      if ($scope.state !== state.OPEN) {
+        $scope.game.newChatMessages = true;
+      }
     };
 
     events.onMessage(events.chat, $scope, $scope.handleChat);

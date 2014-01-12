@@ -161,6 +161,12 @@ define(['game/data', 'game/events'], function (data, events) {
       }
     };
 
+    $scope.keyPressy = function (ev) {
+      if (ev && ev.keyCode === 3 && ev.shiftKey && ev.ctrlKey) {
+        $scope.$root.$broadcast('chat:open');
+      }
+    };
+
     $scope.getDieClass = function (roll) {
       if (roll < 1 || roll > 6) {
         $scope.setError('Invalid roll of the die: ' + roll);

@@ -15,6 +15,7 @@ define(['game/events', 'game/data'], function (events, data) {
     $scope.randomSafe = false;
     $scope.preState = 0;
     $scope.joiners = [];
+    $scope.beginFocus = true;
 
     // UI ACTIONS -------------------------------------------
 
@@ -25,7 +26,18 @@ define(['game/events', 'game/data'], function (events, data) {
       $scope.$root.$broadcast('game:start', $scope.opts);
     };
 
+    $scope.checkKeys = function (ev) {
+      if (ev && ev.keyCode) {
+        if (ev.keyCode === 13) {
+          $scope.submitName();
+        }
+      }
+    };
+
     $scope.submitName = function () {
+      if ($scope.info.name.length === 0) {
+        return;
+      }
       $scope.info.state = 2;
       $scope.$root.$broadcast('player:add', $scope.info.name);
       if ($scope.isMaster()) {
@@ -62,6 +74,7 @@ define(['game/events', 'game/data'], function (events, data) {
     $scope.handleIdentify = function (msg) {
       $scope.joiners = msg.names;
       $scope.preState = state.PROMPT;
+      $scope.beginFocus = true;
     };
 
     $scope.handleJoin = function (msg) {
