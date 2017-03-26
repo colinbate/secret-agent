@@ -24,6 +24,9 @@
   ],
   "author": "Colin Bate <colin@colinbate.com>",
   "license": "MIT",
+  "engines": {
+    "node": "6.x.x"
+  },
   "dependencies": {
     "primus": "~1.5.1",
     "primus-rooms": "~2.2.0",
